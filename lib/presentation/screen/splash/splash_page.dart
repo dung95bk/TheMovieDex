@@ -1,8 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:themoviedex/generated/r.dart';
 import 'package:themoviedex/presentation/screen/home/home_page.dart';
 import 'package:themoviedex/presentation/screen/splash/splash_provider.dart';
+import 'package:themoviedex/presentation/util/app_theme.dart';
 import 'package:themoviedex/presentation/util/navigator_util.dart';
 import 'package:provider/provider.dart';
 
@@ -21,8 +22,8 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Provider.of<SplashProvider>(context, listen: false).getToken();
+    Timer(Duration(seconds: 3), () {
+      _goFirstPage(context);
     });
   }
 
@@ -40,17 +41,7 @@ class _SplashPageState extends State<SplashPage> {
     return Consumer(
       builder: (context, SplashProvider provider, child) {
         return Container(
-          child: Builder(builder: (context) {
-            if(!provider.token.isEmpty) {
-              SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-                _goFirstPage(context);
-              });
-            }
-            return  Image(
-              image: AssetImage(R.img_logo_among_us),
-              fit: BoxFit.cover,
-            );
-          }),
+          color: AppTheme.nearlyBlack,
         );
       },
     );

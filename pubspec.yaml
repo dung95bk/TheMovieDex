@@ -42,7 +42,10 @@ dependencies:
   flutter_html: ^1.1.1
   hive: ^1.4.4+1
   dio: ^3.0.10
-  http: ^0.12.2
+  flutter_downloader: ^1.5.0
+
+  dio_http_cache: ^0.2.5
+#  http: ^0.12.2
   ff_navigation_bar: ^0.1.5
   provider: ^4.3.2+2
   get_version: ^0.2.2
