@@ -22,7 +22,6 @@ class _MorePageState extends State<MorePage> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return null;
+    return Container();
   }
 }

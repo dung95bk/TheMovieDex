@@ -14,13 +14,14 @@ import 'package:themoviedex/presentation/screen/home/home_provider.dart';
 import 'package:themoviedex/presentation/screen/listwallpaper/list_wallpaper_provider.dart';
 import 'package:themoviedex/presentation/screen/location/location_page_provider.dart';
 import 'package:themoviedex/presentation/screen/map/map_page_provider.dart';
-import 'package:themoviedex/presentation/screen/splash/splash_page.dart';
-import 'package:themoviedex/presentation/screen/splash/splash_provider.dart';
+
 import 'package:themoviedex/presentation/screen/tasks/task_page_provider.dart';
 import 'package:themoviedex/presentation/screen/wallpaper_page/wallpaper_provider.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:themoviedex/presentation/screen2/splash/splash_page.dart';
+import 'package:themoviedex/presentation/screen2/splash/splash_provider.dart';
 
 import 'data/helper/box_name.dart';
 void configLoading() {

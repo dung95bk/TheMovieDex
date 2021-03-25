@@ -22,7 +22,6 @@ class _MyMoviePageState extends State<MyMoviePage> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return null;
+    return Container();
   }
 }
