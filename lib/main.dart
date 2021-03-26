@@ -21,6 +21,11 @@ import 'package:themoviedex/presentation/screen/wallpaper_page/wallpaper_provide
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:themoviedex/presentation/screen2/main/components/celeb/celeb_page_provider.dart';
+import 'package:themoviedex/presentation/screen2/main/components/home/home_page_provider.dart';
+import 'package:themoviedex/presentation/screen2/main/components/mymovie/my_movie_provider.dart';
+import 'package:themoviedex/presentation/screen2/main/components/search/search_page_provider.dart';
+import 'package:themoviedex/presentation/screen2/main/main_page_provider.dart';
 
 import 'data/helper/box_name.dart';
 void configLoading() {
@@ -62,6 +67,13 @@ Future<void> main()  async {
       ChangeNotifierProvider(create: (_) => TaskPageProvider(),),
       ChangeNotifierProvider(create: (_) => SplashProvider(),),
       ChangeNotifierProvider(create: (_) => GuideProvider(),),
+
+      //New
+      ChangeNotifierProvider(create: (_) => MainPageProvider(),),
+      ChangeNotifierProvider(create: (_) => CelebPageProvider(),),
+      ChangeNotifierProvider(create: (_) => HomePageProvider(),),
+      ChangeNotifierProvider(create: (_) => MyMovieProvider(),),
+      ChangeNotifierProvider(create: (_) => SearchPageProvider(),),
 
     ],
     child: MyApp(),

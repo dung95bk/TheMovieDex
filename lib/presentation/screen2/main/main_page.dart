@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:themoviedex/presentation/custom_widgets/keepalive_widget.dart';
+import 'package:themoviedex/presentation/screen2/main/components/celeb/celeb_page.dart';
+import 'package:themoviedex/presentation/screen2/main/components/home/home_page.dart';
+import 'package:themoviedex/presentation/screen2/main/components/more/more_page.dart';
+import 'package:themoviedex/presentation/screen2/main/components/mymovie/my_movie_page.dart';
+import 'package:themoviedex/presentation/screen2/main/components/search/search_page.dart';
+import 'package:themoviedex/presentation/screen2/main/main_page_provider.dart';
+import 'package:themoviedex/presentation/screen2/main/widgets/bottom_navigationbar/custom_bottom_navigation_bar.dart';
 import 'package:themoviedex/presentation/util/adapt.dart';
 
 class MainPage extends StatefulWidget {
@@ -24,6 +32,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    MainPageProvider provider = Provider.of<MainPageProvider>(context, listen: false);
     return Builder(
       builder: (context) {
         Adapt.initContext(context);
@@ -45,59 +54,23 @@ class _MainPageState extends State<MainPage> {
         Widget _buildPage(Widget page) {
           return KeepAliveWidget(page);
         }
-
         return Scaffold(
-          key: state.scaffoldKey,
           body: PageView(
             physics: NeverScrollableScrollPhysics(),
-            children: state.pages.map(_buildPage).toList(),
+            children: [
+              HomePage(),
+              SearchPage(),
+              CelebPage(),
+              MyMoviePage(),
+              MorePage()
+            ],
             controller: pageController,
-            onPageChanged: (int i) =>
+            onPageChanged: (int i) => {
+
+            }
 
           ),
-          bottomNavigationBar: BottomNavigationBar(
-            backgroundColor: _theme.backgroundColor,
-            items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(
-                    state.selectedIndex == 0 ? Icons.home : Icons.home_outlined,
-                    size: Adapt.px(44)),
-                label: "Home",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                    state.selectedIndex == 1
-                        ? Icons.movie_creation
-                        : Icons.movie_creation_outlined,
-                    size: Adapt.px(44)),
-                label: "Search",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                    state.selectedIndex == 2
-                        ? Icons.calendar_today
-                        : Icons.calendar_today_outlined,
-                    size: Adapt.px(44)),
-                label: "My Movie",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                  state.selectedIndex == 3
-                      ? Icons.account_circle
-                      : Icons.account_circle_outlined,
-                  size: Adapt.px(44),
-                ),
-                label: "Celeb",
-              ),
-            ],
-            currentIndex: state.selectedIndex,
-            selectedItemColor: _theme.tabBarTheme.labelColor,
-            unselectedItemColor: _theme.tabBarTheme.unselectedLabelColor,
-            onTap: (int index) {
-              pageController.jumpToPage(index);
-            },
-            type: BottomNavigationBarType.fixed,
-          ),
+          bottomNavigationBar: CustomBottomNavigationBar(bottomNavigationKey : provider.bottomNavigationKey)
         );
       },
     );

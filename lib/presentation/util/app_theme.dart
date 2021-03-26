@@ -17,4 +17,8 @@ class AppTheme {
   static const Color chipBackground = Color(0xFFEEF1F3);
   static const Color spacer = Color(0xFFF2F2F2);
 
+  static const Color bottomNavigationBarBackground_light = Color(0xFF767676);
+  static const Color item_bottomNavigation_unselected = Color(0xFF364A54);
+  static const Color item_bottomNavigation_selected = Color(0xFF00B6F0);
+
 }

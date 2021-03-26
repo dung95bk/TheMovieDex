@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
 
-class MyMovieProviderProvider extends ChangeNotifier {
+class MyMovieProvider extends ChangeNotifier {
 
 }
