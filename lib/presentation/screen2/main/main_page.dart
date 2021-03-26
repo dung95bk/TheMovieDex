@@ -55,22 +55,22 @@ class _MainPageState extends State<MainPage> {
           return KeepAliveWidget(page);
         }
         return Scaffold(
-          body: PageView(
-            physics: NeverScrollableScrollPhysics(),
-            children: [
-              HomePage(),
-              SearchPage(),
-              CelebPage(),
-              MyMoviePage(),
-              MorePage()
-            ],
-            controller: pageController,
-            onPageChanged: (int i) => {
+            body: PageView(
+                physics: NeverScrollableScrollPhysics(),
+                children: [
+                  HomePage(),
+                  SearchPage(),
+                  CelebPage(),
+                  MyMoviePage(),
+                  MorePage()
+                ],
+                controller: pageController,
+                onPageChanged: (int i) => {
 
-            }
+                }
 
-          ),
-          bottomNavigationBar: CustomBottomNavigationBar(bottomNavigationKey : provider.bottomNavigationKey)
+            ),
+            bottomNavigationBar: CustomBottomNavigationBar(bottomNavigationKey : provider.bottomNavigationKey)
         );
       },
     );

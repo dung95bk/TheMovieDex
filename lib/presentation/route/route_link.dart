@@ -2,7 +2,7 @@
 
 
 
-import 'package:themoviedex/presentation/screen/splash/splash_page.dart';
+import 'package:themoviedex/presentation/screen2/splash/splash_page.dart';
 
 class RouteLink {
   RouteLink._();

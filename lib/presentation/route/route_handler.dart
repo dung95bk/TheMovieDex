@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:themoviedex/presentation/route/route_link.dart';
-import 'package:themoviedex/presentation/screen/splash/splash_page.dart';
+import 'package:themoviedex/presentation/screen2/splash/splash_page.dart';
 
 PageRouteBuilder routeHandler(RouteSettings settings) {
   return PageRouteBuilder(
