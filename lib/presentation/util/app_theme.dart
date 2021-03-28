@@ -1,6 +1,12 @@
 import 'dart:ui';
 
+import 'package:themoviedex/presentation/util/color_util.dart';
+
 class AppTheme {
+  /* Convert from hexa
+    Exxample hexa = "979797", we add 2 value front of it
+   */
+
   static const int PRIMARY_COLOR = 0xFFf017cf9;
   static const Color notWhite = Color(0xFFEDF0F2);
   static const Color nearlyWhite = Color(0xFFFFFFFF);
@@ -17,8 +23,13 @@ class AppTheme {
   static const Color chipBackground = Color(0xFFEEF1F3);
   static const Color spacer = Color(0xFFF2F2F2);
 
-  static const Color bottomNavigationBarBackground_light = Color(0xFF767676);
-  static const Color item_bottomNavigation_unselected = Color(0xFF364A54);
-  static const Color item_bottomNavigation_selected = Color(0xFF00B6F0);
+  static const Color bottomNavigationBarBackground_light = Color(0xF00E0E0E);
+  static const Color bottomNavigationBarBackgroundt = Color(0xF01C1C1C);
+
+  static const Color item_bottomNavigation_unselected = Color(0xFF6E6E6E);
+  static const Color item_bottomNavigation_selected = Color(0xFFFFFFFF);
+  static const Color item_list_background =  Color(0xFF979797);
+  static const Color image_place_holder =  Color(0xFFE2E2E2);
+
 
 }

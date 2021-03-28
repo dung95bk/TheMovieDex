@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:themoviedex/presentation/util/app_theme.dart';
 import 'package:themoviedex/presentation/util/hex_color.dart';
 
 class RPSCustomPainter extends CustomPainter{
@@ -10,7 +11,7 @@ class RPSCustomPainter extends CustomPainter{
 
 
     Paint paint_0 = new Paint()
-      ..color = HexColor("#C1C1C1")
+      ..color = AppTheme.bottomNavigationBarBackgroundt
       ..style = PaintingStyle.fill
       ..strokeWidth = 1.0;
 

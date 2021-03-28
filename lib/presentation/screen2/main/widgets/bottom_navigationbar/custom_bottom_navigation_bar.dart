@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:themoviedex/generated/r.dart';
 import 'package:themoviedex/presentation/screen2/main/widgets/bottom_navigationbar/custom_bottom_navigation_bar_provider.dart';
 import 'package:themoviedex/presentation/util/adapt.dart';
 import 'package:themoviedex/presentation/util/app_theme.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
   Key bottomNavigationKey;
+  ValueChanged<int> pageChange;
 
-  CustomBottomNavigationBar({Key key, @required this.bottomNavigationKey})
+  CustomBottomNavigationBar({Key key, @required this.bottomNavigationKey, @required this.pageChange})
       : super(key: key);
 
   @override
@@ -18,6 +20,7 @@ class CustomBottomNavigationBar extends StatefulWidget {
 
 class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   CustomBottomNavigationBarProvider providerr;
+
   @override
   void initState() {
     super.initState();
@@ -35,62 +38,69 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
         value: providerr,
         child: Consumer(builder:
             (context, CustomBottomNavigationBarProvider provider, child) {
-          return BottomNavigationBar(
-            key: widget.bottomNavigationKey,
-            backgroundColor: AppTheme.bottomNavigationBarBackground_light,
-            items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(
-                    provider.currentIndex == 0
-                        ? Icons.home
-                        : Icons.home_outlined,
-                    size: Adapt.px(44)),
-                label: "Home",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                    provider.currentIndex == 1
-                        ? Icons.movie_creation
-                        : Icons.movie_creation_outlined,
-                    size: Adapt.px(44)),
-                label: "Search",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                    provider.currentIndex == 2
-                        ? Icons.calendar_today
-                        : Icons.calendar_today_outlined,
-                    size: Adapt.px(44)),
-                label: "My Movie",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                  provider.currentIndex == 3
-                      ? Icons.account_circle
-                      : Icons.account_circle_outlined,
-                  size: Adapt.px(44),
+          return
+            BottomNavigationBar(
+              key: widget.bottomNavigationKey,
+              backgroundColor: Color(0xE6000000),
+              items: <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                    icon: ImageIcon(
+                      provider.currentIndex == 0
+                          ? AssetImage(R.img_ic_tab_home_active)
+                          : AssetImage(R.img_ic_tab_home_inactive),
+                    ),
+                    label: "Home"
+
                 ),
-                label: "Celeb",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                  provider.currentIndex == 4
-                      ? Icons.people
-                      : Icons.people_alt_outlined,
-                  size: Adapt.px(44),
+                BottomNavigationBarItem(
+                    icon: ImageIcon(
+                      provider.currentIndex == 1
+                          ? AssetImage(R.img_ic_tab_search_active)
+                          : AssetImage(R.img_ic_tab_search_inactive),
+                    ),
+                    label: "Search"
+
                 ),
-                label: "Celeb",
-              ),
-            ],
-            currentIndex: provider.currentIndex,
-            selectedItemColor: AppTheme.item_bottomNavigation_selected,
-            unselectedItemColor: AppTheme.item_bottomNavigation_unselected,
-            onTap: (int index) {
-              provider.currentIndex = index;
-              print("Hello");
-            },
-            type: BottomNavigationBarType.fixed,
-          );
+                BottomNavigationBarItem(
+                    icon: ImageIcon(
+                      provider.currentIndex == 2
+                          ? AssetImage(R.img_ic_tab_movie_active)
+                          : AssetImage(R.img_ic_tab_movie_inactive),
+                    ),
+                    label: "Movie"
+
+                ),
+                BottomNavigationBarItem(
+                    icon: ImageIcon(
+                      provider.currentIndex == 3
+                          ? AssetImage(R.img_ic_tab_celeb_active)
+                          : AssetImage(R.img_ic_tab_celeb_inactive),
+                    ),
+                    label: "Celeb"
+
+                ),
+                BottomNavigationBarItem(
+                    icon: ImageIcon(
+                      provider.currentIndex == 4
+                          ? AssetImage(R.img_ic_tab_more_active)
+                          : AssetImage(R.img_ic_tab_more_inactive),
+                    ),
+                    label: "More"
+                ),
+              ],
+              currentIndex: provider.currentIndex,
+              selectedItemColor: AppTheme.item_bottomNavigation_selected,
+              unselectedItemColor: AppTheme
+                  .item_bottomNavigation_unselected,
+              showSelectedLabels: false,
+              showUnselectedLabels: false,
+              onTap: (int index) {
+                provider.currentIndex = index;
+                widget.pageChange(index);
+              },
+              type: BottomNavigationBarType.fixed,
+            );
+
         }));
   }
 }

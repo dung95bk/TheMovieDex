@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:themoviedex/presentation/screen/home/home_page.dart';
-import 'package:themoviedex/presentation/screen2/item_custom/item_custom.dart';
 import 'package:themoviedex/presentation/screen2/main/main_page.dart';
 import 'package:themoviedex/presentation/screen2/splash/splash_provider.dart';
 import 'package:themoviedex/presentation/util/app_theme.dart';
@@ -35,7 +34,7 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   _goFirstPage(BuildContext context) {
-    NavigatorUtil.pushPageReplacement(context, ItemCustomWidget());
+    NavigatorUtil.pushPageReplacement(context, MainPage());
   }
 
   @override

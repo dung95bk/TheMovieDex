@@ -39,6 +39,7 @@ class Request {
           message: response.statusMessage,
           result: ModelFactory.generate(response.data));
     } on DioError catch (_) {
+      print("Error");
       return ResponseModel(
           statusCode: _.response?.statusCode ?? _.type.index,
           message: _.message);
