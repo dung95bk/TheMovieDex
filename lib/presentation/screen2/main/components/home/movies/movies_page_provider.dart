@@ -18,4 +18,5 @@ class MoviesPageProvider extends ChangeNotifier {
 
   void getMovie() async {
 
+  }
 }

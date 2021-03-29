@@ -19,6 +19,7 @@ class R {
 	static const String img_ic_tab_search_active = "assets/img/ic_tab_search_active.png";
 	static const String img_ic_tab_search_inactive = "assets/img/ic_tab_search_inactive.png";
 	static const String img_ic_task_clear_asteroids = "assets/img/ic_task_clear_asteroids.png";
+	static const String img_ic_topone = "assets/img/ic_topone.png";
 	static const String img_ic_tv_airing = "assets/img/ic_tv_airing.png";
 	static const String img_ic_tv_ontv = "assets/img/ic_tv_ontv.png";
 	static const String img_ic_tv_popular = "assets/img/ic_tv_popular.png";
