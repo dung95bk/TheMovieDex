@@ -3,6 +3,8 @@ class R {
 	static const String img_ic_category = "assets/img/ic_category.jpg";
 	static const String img_ic_close = "assets/img/ic_close.png";
 	static const String img_ic_guide = "assets/img/ic_guide.png";
+	static const String img_ic_nowplay = "assets/img/ic_nowplay.png";
+	static const String img_ic_popularmovie = "assets/img/ic_popularmovie.png";
 	static const String img_ic_red_char = "assets/img/ic_red_char.png";
 	static const String img_ic_sabotage = "assets/img/ic_sabotage.png";
 	static const String img_ic_score_star = "assets/img/ic_score_star.png";

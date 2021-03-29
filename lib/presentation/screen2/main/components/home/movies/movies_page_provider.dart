@@ -1,16 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:themoviedex/data/remote/models/response_model.dart';
+import 'package:themoviedex/data/remote/models/video_list.dart';
 
-class MoviesPageProviderProvider extends ChangeNotifier {
-  List<ResponseModel> movieList = List<ResponseModel>();
+class MoviesPageProvider extends ChangeNotifier {
+  int currentPage = 0;
+  ResponseModel<VideoListModel> videoListModel;
+  List<VideoListResult> listMovies = [];
+  ResponseModel<VideoListModel> topRatedListModel;
+  List<VideoListResult> listTopRatedMovies = [];
 
-  MoviesPageProviderProvider() {
+  bool isLoadingMovies = false;
+  bool isLoadingTopRate = false;
+
+  MoviesPageProvider() {
 
   }
 
   void getMovie() async {
-    if(movieList.isNotEmpty) return;
-    movieList.clear();
 
-  }
 }

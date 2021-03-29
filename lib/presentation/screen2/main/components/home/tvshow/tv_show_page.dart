@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:themoviedex/data/remote/models/models.dart';
 import 'package:themoviedex/generated/r.dart';
+import 'package:themoviedex/presentation/screen2/main/components/home/tvshow/item_tv_show/item_tv_show_widget.dart';
 import 'package:themoviedex/presentation/screen2/main/components/home/tvshow/shimmer/shimmer_tv_show.dart';
 import 'package:themoviedex/presentation/screen2/main/components/home/tvshow/tv_show_page_provider.dart';
-import 'file:///C:/Users/Admin/AndroidStudioProjects/themoviedex/lib/presentation/screen2/main/components/home/tvshow/item_tv_show/item_tv_show_widget.dart';
 import 'package:themoviedex/presentation/util/adapt.dart';
 import 'package:themoviedex/presentation/util/app_theme.dart';
 

@@ -25,6 +25,7 @@ import 'package:provider/provider.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:themoviedex/presentation/screen2/main/components/celeb/celeb_page_provider.dart';
 import 'package:themoviedex/presentation/screen2/main/components/home/home_page_provider.dart';
+import 'package:themoviedex/presentation/screen2/main/components/home/movies/movies_page_provider.dart';
 import 'package:themoviedex/presentation/screen2/main/components/home/tvshow/tv_show_page_provider.dart';
 import 'package:themoviedex/presentation/screen2/main/components/mymovie/my_movie_provider.dart';
 import 'package:themoviedex/presentation/screen2/main/components/search/search_page_provider.dart';
@@ -81,6 +82,7 @@ Future<void> main()  async {
       ChangeNotifierProvider(create: (_) => MyMovieProvider(),),
       ChangeNotifierProvider(create: (_) => SearchPageProvider(),),
       ChangeNotifierProvider(create: (_) => TvShowPageProvider(),),
+      ChangeNotifierProvider(create: (_) => MoviesPageProvider(),),
 
 
     ],
@@ -124,7 +126,6 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
 
       theme: ThemeData(
-          primarySwatch: Colors.black,
           visualDensity: VisualDensity.adaptivePlatformDensity,
           primaryColor: Colors.black,
           accentColor: Colors.black
