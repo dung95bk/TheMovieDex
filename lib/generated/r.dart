@@ -3,11 +3,13 @@ class R {
 	static const String img_ic_category = "assets/img/ic_category.jpg";
 	static const String img_ic_close = "assets/img/ic_close.png";
 	static const String img_ic_guide = "assets/img/ic_guide.png";
+	static const String img_ic_navigate_next = "assets/img/ic_navigate_next.png";
 	static const String img_ic_nowplay = "assets/img/ic_nowplay.png";
 	static const String img_ic_popularmovie = "assets/img/ic_popularmovie.png";
 	static const String img_ic_red_char = "assets/img/ic_red_char.png";
 	static const String img_ic_sabotage = "assets/img/ic_sabotage.png";
 	static const String img_ic_score_star = "assets/img/ic_score_star.png";
+	static const String img_ic_seemore = "assets/img/ic_seemore.png";
 	static const String img_ic_tab_celeb_active = "assets/img/ic_tab_celeb_active.png";
 	static const String img_ic_tab_celeb_inactive = "assets/img/ic_tab_celeb_inactive.png";
 	static const String img_ic_tab_home_active = "assets/img/ic_tab_home_active.png";
@@ -20,6 +22,7 @@ class R {
 	static const String img_ic_tab_search_inactive = "assets/img/ic_tab_search_inactive.png";
 	static const String img_ic_task_clear_asteroids = "assets/img/ic_task_clear_asteroids.png";
 	static const String img_ic_topone = "assets/img/ic_topone.png";
+	static const String img_ic_toprate_movie = "assets/img/ic_toprate_movie.png";
 	static const String img_ic_tv_airing = "assets/img/ic_tv_airing.png";
 	static const String img_ic_tv_ontv = "assets/img/ic_tv_ontv.png";
 	static const String img_ic_tv_popular = "assets/img/ic_tv_popular.png";

@@ -628,8 +628,15 @@ class TMDBApi {
 
   ///Get the keywords that have been added to a movie.
   Future<ResponseModel<KeyWordModel>> getMovieKeyWords(int moiveid) async {
-    final String param = '/movie/$moiveid/keywords?api_key=$_apikey';
+    final String param = '/movie/top_rated?api_key=$_apikey';
     final r = await _http.request<KeyWordModel>(param, cached: true);
+    return r;
+  }
+
+  Future<ResponseModel<VideoListModel>> getMovieTopRated(int page) async {
+    String param = '/movie/top_rated?api_key=$_apikey&language=$_language&region=$region';
+    param += page == null ? '' : '&page=$page';
+    final r = await _http.request<VideoListModel>(param, cached: true);
     return r;
   }
 

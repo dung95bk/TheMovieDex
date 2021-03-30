@@ -65,6 +65,8 @@ dependencies:
   flutter_native_splash: ^0.1.9
   extended_image_library: ^0.3.0
   carousel_slider: ^3.0.0
+#  logger: ^1.0.0
+
 
 
   #  firebase_admob:

@@ -26,17 +26,19 @@ class _MoviesPageState extends State<MoviesPage> {
   double itemRowCategory;
   double itemTopRatedWidth;
   double itemTopRatedImageWidth;
+  double itemTopRatedImageHeight;
   double itemTopRatedHeight;
 
   @override
   void initState() {
     super.initState();
-    marginList = Adapt.px(10);
+    marginList = Adapt.px(20);
     itemSliderWidth = (Adapt.screenW() - marginList * 2) * 2 / 3;
     itemRowCategory = (Adapt.screenW() - marginList * 2) / 2;
     itemTopRatedWidth = Adapt.screenW() - marginList * 2;
     itemTopRatedImageWidth = itemTopRatedWidth / 5;
     itemTopRatedHeight = itemTopRatedWidth / 3;
+    itemTopRatedImageHeight = itemTopRatedHeight * 0.8;
   }
 
   @override
@@ -52,18 +54,24 @@ class _MoviesPageState extends State<MoviesPage> {
         return ListView.builder(
           scrollDirection: Axis.vertical,
           itemCount: provider.listTopRatedMovies.length == 0
-              ? 10
-              : provider.listTopRatedMovies.length + 2,
+              ? 10 + 3
+              : provider.listTopRatedMovies.length + 3,
           itemBuilder: (context, index) {
             if (index == 0) {
               return buildSlider(provider);
             } else if (index == 1) {
               return buildRowCategory();
+            } else if (index == 2) {
+              return buildTopRateTitle();
             } else if (provider.listTopRatedMovies.length == 0) {
-              return buildShimmerItemTopRated();
+              int listTopRateIndex = index - 2;
+              return buildShimmerItemTopRated(listTopRateIndex, 10);
             } else {
+              int listTopRateIndex = index - 2;
               return buildItemTopRated(
-                  provider.listTopRatedMovies[index - 2], index - 2);
+                  provider.listTopRatedMovies[listTopRateIndex],
+                  listTopRateIndex,
+                  provider.listTopRatedMovies.length);
             }
           },
         );
@@ -71,45 +79,178 @@ class _MoviesPageState extends State<MoviesPage> {
     );
   }
 
-
-
-  Widget buildShimmerItemTopRated() {}
-
-  Widget buildItemTopRated(VideoListResult itemData, int index) {
+  Widget buildTopRateTitle() {
     return Container(
-        margin: EdgeInsets.all(marginList),
-        child: ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(20)),
-          child: Container(
-            width: itemTopRatedHeight,
-            height: itemTopRatedHeight,
-            decoration: BoxDecoration(
-                color: AppTheme.bottomNavigationBarBackgroundt,
-                borderRadius: BorderRadius.circular(20)),
-            child: Row(
-              children: [
-                CachedNetworkImage(
-                    imageUrl:
-                        ImageUrl.getUrl(itemData.posterPath, ImageSize.w300),
-                    fit: BoxFit.cover,
-                    height: itemTopRatedHeight,
-                    width: itemTopRatedImageWidth,
-                    placeholder: (context, url) => Container(
-                          height: itemTopRatedHeight,
-                          width: itemTopRatedImageWidth,
-                          color: AppTheme.image_place_holder,
-                        ),
-                    errorWidget: (context, url, error) => Container(
-                          height: itemTopRatedHeight,
-                          width: itemTopRatedImageWidth,
-                          color: AppTheme.image_place_holder,
-                        )),
-                Column(
-                  children: [Text("Title"), Text("date")],
-                ),
-              ],
+
+      margin: EdgeInsets.only(left: marginList, right: marginList, top: 50, bottom: 20),
+      child: Row(
+        children: [
+          Image.asset(
+            R.img_ic_toprate_movie,
+            width: 33,
+            height: 36,
+          ),
+          SizedBox(width: 10,),
+          Expanded(
+            child: Text(
+              "Top Rated Movies",
+              style: TextStyle(
+                  color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
             ),
           ),
+          Image.asset(
+            R.img_ic_seemore,
+            width: 36,
+            height: 25,
+          )
+        ],
+      ),
+    );
+  }
+
+  BorderRadius buildBackgroundItemTopRate(int index, int listLength) {
+    bool isLast = false;
+    bool isFirst = false;
+    if (index == 0) {
+      isFirst = true;
+    } else if (index == listLength - 1) {
+      isLast = true;
+    }
+    BorderRadius backgroundItem = BorderRadius.all(Radius.circular(0));
+    if (isLast && isFirst) {
+      backgroundItem = BorderRadius.all(Radius.circular(20));
+    } else if (isFirst) {
+      backgroundItem = BorderRadius.only(
+          topLeft: Radius.circular(20), topRight: Radius.circular(20));
+    } else if (isLast) {
+      backgroundItem = BorderRadius.only(
+          bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20));
+    }
+    return backgroundItem;
+  }
+
+  Widget buildShimmerItemTopRated(int index, int listLength) {
+    EdgeInsets margin = EdgeInsets.only(left: marginList, right: marginList);
+    if (index == 0) {
+      margin = EdgeInsets.only(left: marginList, right: marginList, top: 40);
+    } else if (index == listLength - 1) {
+      margin = EdgeInsets.only(left: marginList, right: marginList, bottom: 40);
+    }
+    return Container(
+        width: itemTopRatedWidth,
+        height: itemTopRatedHeight,
+        padding: EdgeInsets.only(left: 20, right: 20),
+        margin: margin,
+        decoration: BoxDecoration(
+            color: AppTheme.bottomNavigationBarBackgroundt,
+            borderRadius: buildBackgroundItemTopRate(index, listLength)),
+        child: Row(
+          children: [
+            Container(
+              height: itemTopRatedImageHeight,
+              width: itemTopRatedImageWidth,
+              decoration: BoxDecoration(
+                  color: AppTheme.item_list_background,
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Flexible(
+                      fit: FlexFit.loose,
+                      child: Text(
+                        "Title",
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      )),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Flexible(
+                      fit: FlexFit.loose,
+                      child: Text(
+                        "date",
+                        style: TextStyle(color: Color(0xffc9cbcd)),
+                      )),
+                ],
+              ),
+            ),
+            buildTopRatedRank(index)
+          ],
+        ));
+  }
+
+  Widget buildItemTopRated(
+      VideoListResult itemData, int index, int listLength) {
+    EdgeInsets margin = EdgeInsets.only(left: marginList, right: marginList);
+    if (index == 0) {
+      margin = EdgeInsets.only(left: marginList, right: marginList, top: 40);
+    } else if (index == listLength - 1) {
+      margin = EdgeInsets.only(left: marginList, right: marginList, bottom: 40);
+    }
+    return Container(
+        width: itemTopRatedWidth,
+        height: itemTopRatedHeight,
+        padding: EdgeInsets.only(left: 20, right: 20),
+        margin: margin,
+        decoration: BoxDecoration(
+            color: AppTheme.bottomNavigationBarBackgroundt,
+            borderRadius: buildBackgroundItemTopRate(index, listLength)),
+        child: Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              child: CachedNetworkImage(
+                  imageUrl:
+                      ImageUrl.getUrl(itemData.posterPath, ImageSize.w300),
+                  fit: BoxFit.cover,
+                  height: itemTopRatedImageHeight,
+                  width: itemTopRatedImageWidth,
+                  placeholder: (context, url) => Container(
+                        height: itemTopRatedImageHeight,
+                        width: itemTopRatedImageWidth,
+                        color: AppTheme.image_place_holder,
+                      ),
+                  errorWidget: (context, url, error) => Container(
+                        height: itemTopRatedImageHeight,
+                        width: itemTopRatedImageWidth,
+                        color: AppTheme.image_place_holder,
+                      )),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Flexible(
+                      fit: FlexFit.loose,
+                      child: Text(
+                        itemData.title,
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      )),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Flexible(
+                      fit: FlexFit.loose,
+                      child: Text(
+                        "date",
+                        style: TextStyle(color: Color(0xffc9cbcd)),
+                      )),
+                ],
+              ),
+            ),
+            buildTopRatedRank(index)
+          ],
         ));
   }
 
@@ -121,9 +262,29 @@ class _MoviesPageState extends State<MoviesPage> {
         height: 40,
       );
     } else if (index == 1 || index == 2) {
-      return Container();
+      return Container(
+        alignment: Alignment.center,
+        width: 40,
+        decoration: BoxDecoration(
+            shape: BoxShape.circle, color: AppTheme.bg_rank_top_rate),
+        child: Text(
+          "${index + 1}",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+      );
     } else {
-      Container();
+      return Container(
+        alignment: Alignment.center,
+        width: 40,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(width: 2, color: AppTheme.bg_rank_top_rate),
+        ),
+        child: Text(
+          "${index + 1}",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+      );
     }
   }
 
@@ -138,7 +299,9 @@ class _MoviesPageState extends State<MoviesPage> {
               fit: BoxFit.fitWidth,
             ),
           ),
-          SizedBox(width: 20,),
+          SizedBox(
+            width: 20,
+          ),
           Expanded(
             child: Image.asset(
               R.img_ic_popularmovie,
@@ -149,19 +312,19 @@ class _MoviesPageState extends State<MoviesPage> {
       ),
     );
   }
+
   Widget buildShimmerItemSlider() {
-    return  Column(
+    return Column(
       mainAxisSize: MainAxisSize.max,
       children: [
         Container(
-          width:  itemSliderWidth,
+          width: itemSliderWidth,
           height: itemSliderWidth,
           decoration: BoxDecoration(
-            color: AppTheme.item_list_background,
-            borderRadius: BorderRadius.all(Radius.circular(20))
-          ),
+              color: AppTheme.item_list_background,
+              borderRadius: BorderRadius.all(Radius.circular(20))),
         ),
-        SizedBox(height : 10),
+        SizedBox(height: 10),
         Flexible(
           fit: FlexFit.loose,
           child: Text(
@@ -169,10 +332,9 @@ class _MoviesPageState extends State<MoviesPage> {
             style: TextStyle(color: Colors.white),
           ),
         ),
-        SizedBox(height : 10),
+        SizedBox(height: 10),
         Flexible(
           fit: FlexFit.loose,
-
           child: Text(
             "TSDASDDASDASDASDASDASDASDSDSADAS",
             style: TextStyle(color: Color(0xffc9cbcd)),
@@ -181,10 +343,13 @@ class _MoviesPageState extends State<MoviesPage> {
       ],
     );
   }
+
   Widget buildSlider(MoviesPageProvider provider) {
     final text = 'TV Show';
-    final style = TextStyle( fontSize: 16,
-      fontWeight: FontWeight.w700,);
+    final style = TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.w700,
+    );
 
     TextPainter textPainter = TextPainter()
       ..text = TextSpan(text: text, style: style)
@@ -195,12 +360,11 @@ class _MoviesPageState extends State<MoviesPage> {
       itemCount:
           provider.listMovies.length == 0 ? 2 : provider.listMovies.length,
       options: CarouselOptions(
-        height: itemSliderWidth + 20 +   textPainter.height  * 3,
+        height: itemSliderWidth + 20 + textPainter.height * 3,
         enlargeCenterPage: true,
         enableInfiniteScroll: false,
         viewportFraction: 0.8,
         initialPage: 1,
-
       ),
       itemBuilder: (BuildContext context, int index, int realIndex) {
         if (provider.listMovies.length == 0) {
@@ -216,7 +380,6 @@ class _MoviesPageState extends State<MoviesPage> {
     return IntrinsicHeight(
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        
         children: [
           CachedNetworkImage(
             imageUrl: ImageUrl.getUrl(itemData.posterPath, ImageSize.w300),
@@ -238,14 +401,20 @@ class _MoviesPageState extends State<MoviesPage> {
             width: itemSliderWidth,
             child: Text(
               "TSDASDDASDASDASDASDASDASDSDSADAS",
-              style: TextStyle(color: Colors.white,fontSize: 16,
-                fontWeight: FontWeight.w700,),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
           Text(
             "TSDASDDASDASDASDASDASDASDSDSADAS",
-            style: TextStyle(color: Color(0xffc9cbcd), fontSize: 16,
-              fontWeight: FontWeight.w700,),
+            style: TextStyle(
+              color: Color(0xffc9cbcd),
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+            ),
           )
         ],
       ),
