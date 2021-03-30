@@ -27,11 +27,13 @@ class MoviesPageProvider extends ChangeNotifier {
     topRatedListModel = await _tmdb.getMovieTopRated(currentPage);
     isLoading = false;
     if(topRatedListModel.success) {
-      print(topRatedListModel.result.results.toString());
+      print(topRatedListModel.result.results[0].releaseDate);
       topRatedListModel.result.results.forEach((element) {
-        // element.firstAirDate =  convertTime(element.firstAirDate);
+        element.releaseDate =  convertTime(element.releaseDate);
       });
-    ?
+      listTopRatedMovies.addAll(topRatedListModel.result.results);
+      notifyListeners();
+
     } else {
       print(topRatedListModel.message);
     }

@@ -8,6 +8,6 @@ String convertTime(String data) {
         .format(DateTime.parse(data));
   } on Exception catch(e) {
     print(e.toString());
+    return "";
   }
-  return "";
 }

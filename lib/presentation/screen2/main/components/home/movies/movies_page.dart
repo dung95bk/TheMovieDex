@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:themoviedex/data/remote/models/enums/imagesize.dart';
 import 'package:themoviedex/data/remote/models/models.dart';
 import 'package:themoviedex/generated/r.dart';
@@ -51,29 +52,32 @@ class _MoviesPageState extends State<MoviesPage> {
     return Consumer(
       child: buildRowCategory(),
       builder: (context, MoviesPageProvider provider, child) {
-        return ListView.builder(
-          scrollDirection: Axis.vertical,
-          itemCount: provider.listTopRatedMovies.length == 0
-              ? 10 + 3
-              : provider.listTopRatedMovies.length + 3,
-          itemBuilder: (context, index) {
-            if (index == 0) {
-              return buildSlider(provider);
-            } else if (index == 1) {
-              return buildRowCategory();
-            } else if (index == 2) {
-              return buildTopRateTitle();
-            } else if (provider.listTopRatedMovies.length == 0) {
-              int listTopRateIndex = index - 2;
-              return buildShimmerItemTopRated(listTopRateIndex, 10);
-            } else {
-              int listTopRateIndex = index - 2;
-              return buildItemTopRated(
-                  provider.listTopRatedMovies[listTopRateIndex],
-                  listTopRateIndex,
-                  provider.listTopRatedMovies.length);
-            }
-          },
+        return Container(
+          margin: EdgeInsets.only(top: 20),
+          child: ListView.builder(
+            scrollDirection: Axis.vertical,
+            itemCount: provider.listTopRatedMovies.length == 0
+                ? 3 + 3
+                : provider.listTopRatedMovies.length + 3,
+            itemBuilder: (context, index) {
+              if (index == 0) {
+                return buildSlider(provider);
+              } else if (index == 1) {
+                return buildRowCategory();
+              } else if (index == 2) {
+                return buildTopRateTitle();
+              } else if (provider.listTopRatedMovies.length == 0) {
+                int listTopRateIndex = index - 3;
+                return buildShimmerItemTopRated(listTopRateIndex, 3);
+              } else {
+                int listTopRateIndex = index - 3;
+                return buildItemTopRated(
+                    provider.listTopRatedMovies[listTopRateIndex],
+                    listTopRateIndex,
+                    provider.listTopRatedMovies.length);
+              }
+            },
+          ),
         );
       },
     );
@@ -81,8 +85,8 @@ class _MoviesPageState extends State<MoviesPage> {
 
   Widget buildTopRateTitle() {
     return Container(
-
-      margin: EdgeInsets.only(left: marginList, right: marginList, top: 50, bottom: 20),
+      margin: EdgeInsets.only(
+          left: marginList, right: marginList, top: 50, bottom: 20),
       child: Row(
         children: [
           Image.asset(
@@ -90,12 +94,16 @@ class _MoviesPageState extends State<MoviesPage> {
             width: 33,
             height: 36,
           ),
-          SizedBox(width: 10,),
+          SizedBox(
+            width: 10,
+          ),
           Expanded(
             child: Text(
               "Top Rated Movies",
               style: TextStyle(
-                  color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20),
             ),
           ),
           Image.asset(
@@ -136,53 +144,54 @@ class _MoviesPageState extends State<MoviesPage> {
     } else if (index == listLength - 1) {
       margin = EdgeInsets.only(left: marginList, right: marginList, bottom: 40);
     }
-    return Container(
-        width: itemTopRatedWidth,
-        height: itemTopRatedHeight,
-        padding: EdgeInsets.only(left: 20, right: 20),
-        margin: margin,
-        decoration: BoxDecoration(
-            color: AppTheme.bottomNavigationBarBackgroundt,
-            borderRadius: buildBackgroundItemTopRate(index, listLength)),
-        child: Row(
-          children: [
-            Container(
-              height: itemTopRatedImageHeight,
-              width: itemTopRatedImageWidth,
-              decoration: BoxDecoration(
-                  color: AppTheme.item_list_background,
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Flexible(
-                      fit: FlexFit.loose,
-                      child: Text(
-                        "Title",
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      )),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Flexible(
-                      fit: FlexFit.loose,
-                      child: Text(
-                        "date",
-                        style: TextStyle(color: Color(0xffc9cbcd)),
-                      )),
-                ],
+    return Shimmer.fromColors(
+      baseColor: AppTheme.bottomNavigationBarBackgroundt,
+      highlightColor: AppTheme.item_list_background,
+      child: Container(
+          width: itemTopRatedWidth,
+          height: itemTopRatedHeight,
+          padding: EdgeInsets.only(left: 20, right: 20),
+          margin: margin,
+          decoration: BoxDecoration(
+              color: AppTheme.bottomNavigationBarBackgroundt,
+              borderRadius: buildBackgroundItemTopRate(index, listLength)),
+          child: Row(
+            children: [
+              Container(
+                height: itemTopRatedImageHeight,
+                width: itemTopRatedImageWidth,
+                decoration: BoxDecoration(
+                    color: AppTheme.item_list_background,
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
               ),
-            ),
-            buildTopRatedRank(index)
-          ],
-        ));
+              SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: itemTopRatedImageWidth/2,
+                      height: 20,
+                      color: AppTheme.item_list_background,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      width: itemTopRatedWidth/2,
+                      height: 20,
+                      color: AppTheme.item_list_background,
+                    ),
+                  ],
+                ),
+              ),
+              buildTopRatedRank(index)
+            ],
+          )),
+    );
   }
 
   Widget buildItemTopRated(
@@ -243,7 +252,7 @@ class _MoviesPageState extends State<MoviesPage> {
                   Flexible(
                       fit: FlexFit.loose,
                       child: Text(
-                        "date",
+                        "${itemData.releaseDate}",
                         style: TextStyle(color: Color(0xffc9cbcd)),
                       )),
                 ],
