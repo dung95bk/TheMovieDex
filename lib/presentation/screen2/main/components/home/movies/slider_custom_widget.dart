@@ -16,6 +16,8 @@ import 'package:themoviedex/presentation/util/imageurl.dart';
 
 class SliderCustomWidget extends StatefulWidget {
   SliderCustomWidgetProvider provider;
+  PageStorageKey sliderKey= PageStorageKey("P");
+
   SliderCustomWidget({Key key, this.provider}) : super(key: key);
 
   @override
@@ -29,7 +31,7 @@ class _SliderCustomWidgetState extends State<SliderCustomWidget> {
   double itemSliderWidth;
   double itemSliderHeight;
   double heightText;
-  final pageController = PageController(viewportFraction: 0.7);
+  PageController pageController;
   final ValueNotifier<double> _pageNotifier = ValueNotifier(0.0);
   double marginList;
   SliderCustomWidgetProvider provider;
@@ -44,9 +46,11 @@ class _SliderCustomWidgetState extends State<SliderCustomWidget> {
   @override
   void initState() {
     print("initStateslider");
+    pageController = widget.provider.pageController;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       pageController.addListener(_listener);
     });
+
     super.initState();
     itemSliderWidth = (Adapt.screenW()) * 2 / 3;
     provider = widget.provider;
@@ -55,7 +59,6 @@ class _SliderCustomWidgetState extends State<SliderCustomWidget> {
   @override
   void dispose() {
     pageController.removeListener(_listener);
-    pageController.dispose();
     super.dispose();
   }
 
@@ -93,7 +96,9 @@ class _SliderCustomWidgetState extends State<SliderCustomWidget> {
   }
 
   Widget buildPager() {
+
     return CustomPageView.builder(
+
       viewportDirection: false,
       itemCount:
           provider.listMovies.length == 0 ? 3 : provider.listMovies.length,

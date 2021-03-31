@@ -31,7 +31,6 @@ class _MoviesPageState extends State<MoviesPage> {
   double itemTopRatedImageHeight;
   double itemTopRatedHeight;
   Widget slider;
-  GlobalKey sliderKey= GlobalKey();
   SliderCustomWidgetProvider provider;
 
   @override
@@ -333,7 +332,7 @@ class _MoviesPageState extends State<MoviesPage> {
   Widget buildSlider(SliderCustomWidgetProvider provider) {
     print("buildSlider");
 
-    return SliderCustomWidget(key:sliderKey, provider:  provider,);
+    return SliderCustomWidget(provider:  provider,);
   }
 
 

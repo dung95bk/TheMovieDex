@@ -128,6 +128,8 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
           visualDensity: VisualDensity.adaptivePlatformDensity,
           primaryColor: Colors.black,
+          highlightColor: Colors.transparent,
+          splashColor: Colors.transparent,
           accentColor: Colors.black
       ),
       home: SplashPage(),

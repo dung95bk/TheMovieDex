@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:themoviedex/data/remote/models/models.dart';
 import 'package:themoviedex/generated/r.dart';
+import 'package:themoviedex/presentation/screen/category_detail/category_detail_page.dart';
 import 'package:themoviedex/presentation/screen2/main/components/home/tvshow/item_tv_show/item_tv_show_widget.dart';
 import 'package:themoviedex/presentation/screen2/main/components/home/tvshow/shimmer/shimmer_tv_show.dart';
 import 'package:themoviedex/presentation/screen2/main/components/home/tvshow/tv_show_page_provider.dart';
+import 'package:themoviedex/presentation/screen2/main/components/list_movie/list_movie_page.dart';
 import 'package:themoviedex/presentation/util/adapt.dart';
 import 'package:themoviedex/presentation/util/app_theme.dart';
+import 'package:themoviedex/presentation/util/navigator_util.dart';
 
 class TvShowPage extends StatefulWidget {
   TvShowPage({Key key}) : super(key: key);
@@ -99,8 +102,7 @@ class _TvShowPageState extends State<TvShowPage> {
   Widget createItemGridCategory(String icon, String label) {
     return GestureDetector(
       onTap: () {
-        print("TAP");
-        Provider.of<TvShowPageProvider>(context, listen: false).initData();
+        NavigatorUtil.pushPage(context, ListMoviePage());
       },
       child: Container(
         margin: EdgeInsets.all(itemMargin),

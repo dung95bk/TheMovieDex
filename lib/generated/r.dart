@@ -1,8 +1,13 @@
 class R {
 	static const String img_close = "assets/img/close.png";
+	static const String img_ic_back = "assets/img/ic_back.png";
 	static const String img_ic_category = "assets/img/ic_category.jpg";
 	static const String img_ic_close = "assets/img/ic_close.png";
+	static const String img_ic_grid_active = "assets/img/ic_grid_active.png";
+	static const String img_ic_grid_inactive = "assets/img/ic_grid_inactive.png";
 	static const String img_ic_guide = "assets/img/ic_guide.png";
+	static const String img_ic_list_active = "assets/img/ic_list_active.png";
+	static const String img_ic_list_inactive = "assets/img/ic_list_inactive.png";
 	static const String img_ic_navigate_next = "assets/img/ic_navigate_next.png";
 	static const String img_ic_nowplay = "assets/img/ic_nowplay.png";
 	static const String img_ic_popularmovie = "assets/img/ic_popularmovie.png";
