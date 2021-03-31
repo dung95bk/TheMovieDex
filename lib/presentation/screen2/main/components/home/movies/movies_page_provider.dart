@@ -6,8 +6,7 @@ import 'package:themoviedex/presentation/util/time_util.dart';
 
 class MoviesPageProvider extends ChangeNotifier {
   int currentPage = 0;
-  ResponseModel<VideoListModel> videoListModel;
-  List<VideoListResult> listMovies = [];
+
   ResponseModel<VideoListModel> topRatedListModel;
   List<VideoListResult> listTopRatedMovies = [];
 

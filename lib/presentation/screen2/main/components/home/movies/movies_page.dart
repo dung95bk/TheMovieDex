@@ -8,6 +8,8 @@ import 'package:themoviedex/data/remote/models/enums/imagesize.dart';
 import 'package:themoviedex/data/remote/models/models.dart';
 import 'package:themoviedex/generated/r.dart';
 import 'package:themoviedex/presentation/screen2/main/components/home/movies/movies_page_provider.dart';
+import 'package:themoviedex/presentation/screen2/main/components/home/movies/slider_custom_widget.dart';
+import 'package:themoviedex/presentation/screen2/main/components/home/movies/slider_custom_widget_provider.dart';
 import 'package:themoviedex/presentation/util/adapt.dart';
 import 'package:themoviedex/presentation/util/app_theme.dart';
 import 'package:themoviedex/presentation/util/imageurl.dart';
@@ -22,35 +24,41 @@ class MoviesPage extends StatefulWidget {
 }
 
 class _MoviesPageState extends State<MoviesPage> {
-  double itemSliderWidth;
   double marginList;
   double itemRowCategory;
   double itemTopRatedWidth;
   double itemTopRatedImageWidth;
   double itemTopRatedImageHeight;
   double itemTopRatedHeight;
+  Widget slider;
+  GlobalKey sliderKey= GlobalKey();
+  SliderCustomWidgetProvider provider;
 
   @override
   void initState() {
+
     super.initState();
     marginList = Adapt.px(20);
-    itemSliderWidth = (Adapt.screenW() - marginList * 2) * 2 / 3;
     itemRowCategory = (Adapt.screenW() - marginList * 2) / 2;
     itemTopRatedWidth = Adapt.screenW() - marginList * 2;
     itemTopRatedImageWidth = itemTopRatedWidth / 5;
     itemTopRatedHeight = itemTopRatedWidth / 3;
     itemTopRatedImageHeight = itemTopRatedHeight * 0.8;
+    provider = SliderCustomWidgetProvider();
+
   }
 
   @override
   void dispose() {
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    print("revuild");
     return Consumer(
-      child: buildRowCategory(),
+      child: buildSlider(provider),
       builder: (context, MoviesPageProvider provider, child) {
         return Container(
           margin: EdgeInsets.only(top: 20),
@@ -61,7 +69,7 @@ class _MoviesPageState extends State<MoviesPage> {
                 : provider.listTopRatedMovies.length + 3,
             itemBuilder: (context, index) {
               if (index == 0) {
-                return buildSlider(provider);
+                return child;
               } else if (index == 1) {
                 return buildRowCategory();
               } else if (index == 2) {
@@ -299,7 +307,7 @@ class _MoviesPageState extends State<MoviesPage> {
 
   Widget buildRowCategory() {
     return Container(
-      margin: EdgeInsets.only(left: marginList, right: marginList),
+      margin: EdgeInsets.only(left: marginList, right: marginList, top: 20),
       child: Row(
         children: [
           Expanded(
@@ -322,111 +330,13 @@ class _MoviesPageState extends State<MoviesPage> {
     );
   }
 
-  Widget buildShimmerItemSlider() {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Container(
-          width: itemSliderWidth,
-          height: itemSliderWidth,
-          decoration: BoxDecoration(
-              color: AppTheme.item_list_background,
-              borderRadius: BorderRadius.all(Radius.circular(20))),
-        ),
-        SizedBox(height: 10),
-        Flexible(
-          fit: FlexFit.loose,
-          child: Text(
-            "TSDASDDASDASDASDASDASDASDSDSADAS",
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-        SizedBox(height: 10),
-        Flexible(
-          fit: FlexFit.loose,
-          child: Text(
-            "TSDASDDASDASDASDASDASDASDSDSADAS",
-            style: TextStyle(color: Color(0xffc9cbcd)),
-          ),
-        )
-      ],
-    );
+  Widget buildSlider(SliderCustomWidgetProvider provider) {
+    print("buildSlider");
+
+    return SliderCustomWidget(key:sliderKey, provider:  provider,);
   }
 
-  Widget buildSlider(MoviesPageProvider provider) {
-    final text = 'TV Show';
-    final style = TextStyle(
-      fontSize: 16,
-      fontWeight: FontWeight.w700,
-    );
 
-    TextPainter textPainter = TextPainter()
-      ..text = TextSpan(text: text, style: style)
-      ..textDirection = TextDirection.ltr
-      ..layout(minWidth: 0, maxWidth: double.infinity);
 
-    return CarouselSlider.builder(
-      itemCount:
-          provider.listMovies.length == 0 ? 2 : provider.listMovies.length,
-      options: CarouselOptions(
-        height: itemSliderWidth + 20 + textPainter.height * 3,
-        enlargeCenterPage: true,
-        enableInfiniteScroll: false,
-        viewportFraction: 0.8,
-        initialPage: 1,
-      ),
-      itemBuilder: (BuildContext context, int index, int realIndex) {
-        if (provider.listMovies.length == 0) {
-          return buildShimmerItemSlider();
-        } else {
-          return buildItemSlider(provider.listMovies[index]);
-        }
-      },
-    );
-  }
-
-  Widget buildItemSlider(VideoListResult itemData) {
-    return IntrinsicHeight(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CachedNetworkImage(
-            imageUrl: ImageUrl.getUrl(itemData.posterPath, ImageSize.w300),
-            fit: BoxFit.cover,
-            height: itemSliderWidth,
-            width: itemSliderWidth,
-            placeholder: (context, url) => Container(
-              width: itemSliderWidth,
-              height: itemSliderWidth,
-              color: AppTheme.image_place_holder,
-            ),
-            errorWidget: (context, url, error) => Container(
-              width: itemSliderWidth,
-              height: itemSliderWidth,
-              color: AppTheme.image_place_holder,
-            ),
-          ),
-          Container(
-            width: itemSliderWidth,
-            child: Text(
-              "TSDASDDASDASDASDASDASDASDSDSADAS",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-          Text(
-            "TSDASDDASDASDASDASDASDASDSDSADAS",
-            style: TextStyle(
-              color: Color(0xffc9cbcd),
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-            ),
-          )
-        ],
-      ),
-    );
-  }
 }
+
