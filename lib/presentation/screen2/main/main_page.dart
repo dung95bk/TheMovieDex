@@ -26,7 +26,7 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
-    pages = [HomePage(), SearchPage(), CelebPage(), MyMoviePage(), MorePage()];
+    pages = [HomePage(), SearchPage(), MyMoviePage(),  CelebPage(),MorePage()];
   }
 
   @override

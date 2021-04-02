@@ -56,6 +56,7 @@ Future<void> main()  async {
   await Hive.initFlutter();
   await Hive.openBox<ImageModeHive>(BoxName.BOX_IMAGE);
   await Hive.openBox<String>(BoxName.BOX_DOWNLOADED_IMAGE_PATH);
+  await Hive.openBox<String>(BoxName.BOX_SUGGEST_SEARCH);
 
 
 

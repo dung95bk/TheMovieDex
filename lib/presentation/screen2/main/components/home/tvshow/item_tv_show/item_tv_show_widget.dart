@@ -16,10 +16,11 @@ import 'item_custom_model.dart';
 /// Copyright ©2021 by dung.pham1. All rights reserved.
 class ItemTVShowWidget extends StatefulWidget {
   VideoListResult itemData;
+  bool isTvShow = true;
   @override
   State<StatefulWidget> createState() => _StateItemCustomWidget();
 
-  ItemTVShowWidget({Key key, this.itemData}): super(key: key);
+  ItemTVShowWidget({Key key, this.itemData, this.isTvShow = true}): super(key: key);
 }
 
 class _StateItemCustomWidget extends State<ItemTVShowWidget> {
@@ -93,7 +94,7 @@ class _StateItemCustomWidget extends State<ItemTVShowWidget> {
                                   Flexible(
                                     fit: FlexFit.loose,
                                     child: Text(
-                                      itemData.name ?? "null",
+                                      widget.isTvShow  ? (itemData.name ?? "null") : (itemData.originalTitle ?? "null"),
                                       maxLines: 2,
                                       style: TextStyle(
                                         color: Colors.white,
@@ -107,7 +108,7 @@ class _StateItemCustomWidget extends State<ItemTVShowWidget> {
                                   Flexible(
                                     fit: FlexFit.loose,
                                     child: Text(
-                                      itemData.firstAirDate ?? "null",
+                                      widget.isTvShow  ? (itemData.firstAirDate ?? "null") : (itemData.releaseDate ?? "null"),
                                       maxLines: 2,
                                       style: TextStyle(
                                           color: Color(0xffc9cbcd)),

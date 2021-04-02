@@ -9,6 +9,7 @@ import 'package:themoviedex/presentation/screen2/main/components/home/tvshow/tv_
 import 'package:themoviedex/presentation/screen2/main/components/list_movie/list_movie_page.dart';
 import 'package:themoviedex/presentation/util/adapt.dart';
 import 'package:themoviedex/presentation/util/app_theme.dart';
+import 'package:themoviedex/presentation/util/const.dart';
 import 'package:themoviedex/presentation/util/navigator_util.dart';
 
 class TvShowPage extends StatefulWidget {
@@ -87,10 +88,10 @@ class _TvShowPageState extends State<TvShowPage> {
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           childAspectRatio: 1 / 1, crossAxisCount: 2),
       children: [
-        createItemGridCategory(R.img_ic_tv_popular, "Popular"),
-        createItemGridCategory(R.img_ic_tv_ontv, "On TV"),
-        createItemGridCategory(R.img_ic_tv_toprate, "Top Rated"),
-        createItemGridCategory(R.img_ic_tv_airing, "Airing Today"),
+        createItemGridCategory(R.img_ic_tv_popular, "Popular", TYPE_LIST_TVSHOW_POPULAR),
+        createItemGridCategory(R.img_ic_tv_ontv, "On TV", TYPE_LIST_TVSHOW_ONTV),
+        createItemGridCategory(R.img_ic_tv_toprate, "Top Rated", TYPE_LIST_TVSHOW_TOPRATED),
+        createItemGridCategory(R.img_ic_tv_airing, "Airing Today", TYPE_LIST_TVSHOW_AIRING_TODAY),
       ],
     );
   }
@@ -99,10 +100,10 @@ class _TvShowPageState extends State<TvShowPage> {
     return ItemTVShowWidget(  key: ValueKey(itemData.id), itemData: itemData,);
   }
 
-  Widget createItemGridCategory(String icon, String label) {
+  Widget createItemGridCategory(String icon, String label, int type) {
     return GestureDetector(
       onTap: () {
-        NavigatorUtil.pushPage(context, ListMoviePage());
+        NavigatorUtil.pushPage(context, ListMoviePage(title: label, typeList: type,));
       },
       child: Container(
         margin: EdgeInsets.all(itemMargin),

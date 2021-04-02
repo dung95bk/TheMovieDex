@@ -45,3 +45,17 @@ const String shareImageToFacebook = 'shareImageToFacebook';
 ///   },
 /// );
 const String resizeImage = 'resizeImage';
+
+const int TYPE_LIST_MOVIE_POPULAR = 1;
+
+const int TYPE_LIST_MOVIE_NOW_PLAYING = 2;
+
+const int TYPE_LIST_MOVIE_TOP_RATED = 3;
+
+const int TYPE_LIST_TVSHOW_POPULAR = 4;
+
+const int TYPE_LIST_TVSHOW_ONTV = 5;
+
+const int TYPE_LIST_TVSHOW_TOPRATED = 6;
+
+const int TYPE_LIST_TVSHOW_AIRING_TODAY = 7;

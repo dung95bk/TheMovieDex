@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -10,9 +11,12 @@ import 'package:themoviedex/generated/r.dart';
 import 'package:themoviedex/presentation/screen2/main/components/home/movies/movies_page_provider.dart';
 import 'package:themoviedex/presentation/screen2/main/components/home/movies/slider_custom_widget.dart';
 import 'package:themoviedex/presentation/screen2/main/components/home/movies/slider_custom_widget_provider.dart';
+import 'package:themoviedex/presentation/screen2/main/components/list_movie/list_movie_page.dart';
 import 'package:themoviedex/presentation/util/adapt.dart';
 import 'package:themoviedex/presentation/util/app_theme.dart';
+import 'package:themoviedex/presentation/util/const.dart';
 import 'package:themoviedex/presentation/util/imageurl.dart';
+import 'package:themoviedex/presentation/util/navigator_util.dart';
 
 class MoviesPage extends StatefulWidget {
   MoviesPage({Key key}) : super(key: key);
@@ -113,10 +117,16 @@ class _MoviesPageState extends State<MoviesPage> {
                   fontSize: 20),
             ),
           ),
-          Image.asset(
-            R.img_ic_seemore,
-            width: 36,
-            height: 25,
+          GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () {
+              NavigatorUtil.pushPage(context, ListMoviePage(title: "Top Rated Movies", typeList: TYPE_LIST_MOVIE_TOP_RATED,));
+            },
+            child: Image.asset(
+              R.img_ic_seemore,
+              width: 36,
+              height: 25,
+            ),
           )
         ],
       ),
@@ -310,18 +320,30 @@ class _MoviesPageState extends State<MoviesPage> {
       child: Row(
         children: [
           Expanded(
-            child: Image.asset(
-              R.img_ic_nowplay,
-              fit: BoxFit.fitWidth,
+            child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: () {
+                NavigatorUtil.pushPage(context, ListMoviePage(title: "Now Playing Movies", typeList: TYPE_LIST_MOVIE_NOW_PLAYING,));
+              },
+              child: Image.asset(
+                R.img_ic_nowplay,
+                fit: BoxFit.fitWidth,
+              ),
             ),
           ),
           SizedBox(
             width: 20,
           ),
           Expanded(
-            child: Image.asset(
-              R.img_ic_popularmovie,
-              fit: BoxFit.contain,
+            child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: () {
+                NavigatorUtil.pushPage(context, ListMoviePage(title: "Popular Movies", typeList: TYPE_LIST_MOVIE_POPULAR,));
+              },
+              child: Image.asset(
+                R.img_ic_popularmovie,
+                fit: BoxFit.contain,
+              ),
             ),
           ),
         ],

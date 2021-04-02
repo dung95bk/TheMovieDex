@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:themoviedex/data/remote/models/response_model.dart';
 import 'package:themoviedex/data/remote/models/video_list.dart';
 import 'package:themoviedex/data/remote/tmdb_api.dart';
+import 'package:themoviedex/presentation/util/const.dart';
 import 'package:themoviedex/presentation/util/time_util.dart';
 
 class ListMoviePageProvider extends ChangeNotifier {
@@ -12,6 +13,8 @@ class ListMoviePageProvider extends ChangeNotifier {
   List<VideoListResult> listTvShow = [];
   bool isLoading = false;
   ScrollController scrollController = ScrollController();
+  int typeList = TYPE_LIST_MOVIE_TOP_RATED;
+  ListMoviePageProvider(this.typeList);
 
   void initData() async {
     addScrollListener();
@@ -41,16 +44,41 @@ class ListMoviePageProvider extends ChangeNotifier {
     final _tmdb = TMDBApi.instance;
     isLoading = true;
     currentPage += 1;
-
-    videoListModel = await _tmdb.getTVDiscover(
-      page: currentPage,
-      sortBy: "popularity.desc",
-    );
+    switch(typeList) {
+      case TYPE_LIST_MOVIE_POPULAR: {
+        videoListModel = await _tmdb.getMoviePopular(currentPage);
+        break;
+      }
+      case TYPE_LIST_MOVIE_NOW_PLAYING: {
+        videoListModel = await _tmdb.getMovieNowPlaying(currentPage);
+        break;
+      }
+      case TYPE_LIST_MOVIE_TOP_RATED: {
+        videoListModel = await _tmdb.getMovieTopRated(currentPage);
+        break;
+      }
+      case TYPE_LIST_TVSHOW_ONTV: {
+        videoListModel = await _tmdb.getTvShowOnTheAirToday(currentPage);
+        break;
+      }
+      case TYPE_LIST_TVSHOW_POPULAR: {
+        videoListModel = await _tmdb.getTvShowPopular(currentPage);
+        break;
+      }
+      case TYPE_LIST_TVSHOW_AIRING_TODAY: {
+        videoListModel = await _tmdb.getTvShowAiringToday(currentPage);
+        break;
+      }
+      case TYPE_LIST_TVSHOW_TOPRATED: {
+        videoListModel = await _tmdb.getTVShowTopRated(currentPage);
+        break;
+      }
+    }
     isLoading = false;
     if(videoListModel.success) {
       print(videoListModel.result.totalPages.toString());
       videoListModel.result.results.forEach((element) {
-        element.firstAirDate =  convertTime(element.firstAirDate);
+        element.releaseDate =  convertTime(element.releaseDate);
       });
       listTvShow.addAll(videoListModel.result.results);
       notifyListeners();

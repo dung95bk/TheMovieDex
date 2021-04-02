@@ -12,17 +12,22 @@ import 'package:themoviedex/presentation/screen2/main/components/list_movie/list
 import 'package:themoviedex/presentation/screen2/widgets/tabbar_list_movie_widget.dart';
 import 'package:themoviedex/presentation/util/adapt.dart';
 import 'package:themoviedex/presentation/util/app_theme.dart';
+import 'package:themoviedex/presentation/util/const.dart';
 import 'package:themoviedex/presentation/util/imageurl.dart';
 import 'package:themoviedex/presentation/util/navigator_util.dart';
 
 class ListMoviePage extends StatefulWidget {
-  ListMoviePage({Key key}) : super(key: key);
+  String title;
+  int typeList = TYPE_LIST_MOVIE_TOP_RATED;
+  ListMoviePage({Key key, this.title, this.typeList }) : super(key: key);
 
   @override
   _ListMoviePageState createState() {
     return _ListMoviePageState();
   }
 }
+
+
 
 class _ListMoviePageState extends State<ListMoviePage> {
   ListMoviePageProvider provider;
@@ -34,7 +39,7 @@ class _ListMoviePageState extends State<ListMoviePage> {
   @override
   void initState() {
     super.initState();
-    provider = ListMoviePageProvider();
+    provider = ListMoviePageProvider(widget.typeList);
     provider.initData();
     itemMargin = Adapt.px(10);
     double screenWidth = Adapt.screenW();
@@ -83,7 +88,17 @@ class _ListMoviePageState extends State<ListMoviePage> {
               height: 23,
             ),
           ),
-          Expanded(child: SizedBox()),
+          Expanded(child: Container(
+            margin: EdgeInsets.only(left: 20),
+            child: Text(
+              "${widget.title}",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold
+              ),
+            ),
+          )),
           buildSwitcher()
         ],
       ),
@@ -213,9 +228,11 @@ class _ListMoviePageState extends State<ListMoviePage> {
   }
 
   Widget createItemListTvShow(VideoListResult itemData) {
+    bool isMovie = widget.typeList < TYPE_LIST_TVSHOW_POPULAR;
     return ItemTVShowWidget(
       key: ValueKey(itemData.id),
       itemData: itemData,
+      isTvShow : !isMovie
     );
   }
 }

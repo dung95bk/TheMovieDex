@@ -640,6 +640,56 @@ class TMDBApi {
     return r;
   }
 
+  Future<ResponseModel<SearchResultModel>> getPopularPerson(int page) async {
+    String param = '/person/popular?api_key=$_apikey&language=$_language&region=$region';
+    param += page == null ? '' : '&page=$page';
+    final r = await _http.request<SearchResultModel>(param, cached: true);
+    return r;
+  }
+
+  Future<ResponseModel<VideoListModel>> getMoviePopular(int page) async {
+    String param = '/movie/popular?api_key=$_apikey&language=$_language&region=$region';
+    param += page == null ? '' : '&page=$page';
+    final r = await _http.request<VideoListModel>(param, cached: true);
+    return r;
+  }
+
+  Future<ResponseModel<VideoListModel>> getMovieNowPlaying(int page) async {
+    String param = '/movie/now_playing?api_key=$_apikey&language=$_language&region=$region';
+    param += page == null ? '' : '&page=$page';
+    final r = await _http.request<VideoListModel>(param, cached: true);
+    return r;
+  }
+
+  Future<ResponseModel<VideoListModel>> getTVShowTopRated(int page) async {
+    String param = '/tv/top_rated?api_key=$_apikey&language=$_language&region=$region';
+    param += page == null ? '' : '&page=$page';
+    final r = await _http.request<VideoListModel>(param, cached: true);
+    return r;
+  }
+
+
+  Future<ResponseModel<VideoListModel>> getTvShowPopular(int page) async {
+    String param = '/tv/popular?api_key=$_apikey&language=$_language&region=$region';
+    param += page == null ? '' : '&page=$page';
+    final r = await _http.request<VideoListModel>(param, cached: true);
+    return r;
+  }
+
+  Future<ResponseModel<VideoListModel>> getTvShowAiringToday(int page) async {
+    String param = '/tv/airing_today?api_key=$_apikey&language=$_language&region=$region';
+    param += page == null ? '' : '&page=$page';
+    final r = await _http.request<VideoListModel>(param, cached: true);
+    return r;
+  }
+
+  Future<ResponseModel<VideoListModel>> getTvShowOnTheAirToday(int page) async {
+    String param = '/tv/on_the_air?api_key=$_apikey&language=$_language&region=$region';
+    param += page == null ? '' : '&page=$page';
+    final r = await _http.request<VideoListModel>(param, cached: true);
+    return r;
+  }
+
   Future<ResponseModel<KeyWordModel>> getTVKeyWords(int tvid) async {
     final String param = '/tv/$tvid/keywords?api_key=$_apikey';
     final r = await _http.request<KeyWordModel>(param, cached: true);
