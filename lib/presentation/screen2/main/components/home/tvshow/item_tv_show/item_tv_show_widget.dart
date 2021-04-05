@@ -15,7 +15,7 @@ import 'item_custom_model.dart';
 ///
 /// Copyright ©2021 by dung.pham1. All rights reserved.
 class ItemTVShowWidget extends StatefulWidget {
-  VideoListResult itemData;
+  Object itemData;
   bool isTvShow = true;
   @override
   State<StatefulWidget> createState() => _StateItemCustomWidget();
@@ -69,16 +69,16 @@ class _StateItemCustomWidget extends State<ItemTVShowWidget> {
                               fit: BoxFit.cover,
                               height: _cardHeight,
                               width: _imageWidth,
-                              placeholder: (context, url) => Container(
+                              placeholder: (context, url) => Image.asset(R.img_image_thumb,
                                 width: _cardHeight,
                                 height: _cardHeight,
-                                color: AppTheme.image_place_holder,
+                                fit: BoxFit.cover,
                               ),
                               errorWidget: (context, url, error) =>
-                                  Container(
+                                  Image.asset(R.img_image_thumb,
                                     width: _cardHeight,
                                     height: _cardHeight,
-                                    color: AppTheme.image_place_holder,
+                                    fit: BoxFit.cover,
                                   ),
                             ),
                           ),

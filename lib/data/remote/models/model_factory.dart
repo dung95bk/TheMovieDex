@@ -1,3 +1,5 @@
+import 'package:themoviedex/data/remote/models/external_id_models.dart';
+
 import 'models.dart';
 
 class ModelFactory {
@@ -87,6 +89,8 @@ class ModelFactory {
         return StripeCreditCards(json) as T;
       case 'StripeCharges':
         return StripeCharges(json) as T;
+      case 'ExternalIdModels':
+        return ExternalIdModels(json) as T;
       default:
         return json;
     }

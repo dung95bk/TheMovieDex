@@ -11,7 +11,7 @@ class ExternalIdsModel {
   String imdbId;
   String instagramId;
   String twitterId;
-
+  ExternalIdsModel.empty();
   ExternalIdsModel.fromParams({this.id, this.tvdbId, this.tvrageId, this.facebookId, this.freebaseId, this.freebaseMid, this.imdbId, this.instagramId, this.twitterId});
 
   factory ExternalIdsModel(jsonStr) => jsonStr == null ? null : jsonStr is String ? new ExternalIdsModel.fromJson(json.decode(jsonStr)) : new ExternalIdsModel.fromJson(jsonStr);

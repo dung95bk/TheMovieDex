@@ -6,6 +6,8 @@ import 'package:themoviedex/data/config/LocalConfig.dart';
 import 'package:themoviedex/data/config/ServerConfig.dart';
 import 'package:themoviedex/data/remote/models/enums/media_type.dart';
 import 'package:themoviedex/data/remote/models/enums/time_window.dart';
+import 'package:themoviedex/data/remote/models/external_id_models.dart';
+import 'package:themoviedex/data/remote/models/external_ids_model.dart';
 
 import 'models/models.dart';
 import 'request.dart';
@@ -847,10 +849,16 @@ class TMDBApi {
 
   Future<ResponseModel<PeopleDetailModel>> getPeopleDetail(int peopleid,
       {String appendToResponse}) async {
-    String param = '/person/$peopleid?api_key=$_apikey&language=$_language';
+    String param = '/person/${peopleid}?api_key=$_apikey&language=$_language';
     if (appendToResponse != null)
       param += '&append_to_response=$appendToResponse';
     final r = await _http.request<PeopleDetailModel>(param, cached: true);
+    return r;
+  }
+
+  Future<ResponseModel<ExternalIdModels>> getExternalIds(int peopleid) async {
+    String param = '/person/${peopleid}/external_ids?api_key=$_apikey&language=$_language';
+    final r = await _http.request<ExternalIdModels>(param, cached: true);
     return r;
   }
 
@@ -865,7 +873,7 @@ class TMDBApi {
   Future<ResponseModel<CombinedCreditsModel>> getCombinedCredits(
       int peopleid) async {
     final String param =
-        '/person/$peopleid/combined_credits?api_key=$_apikey&language=$_language';
+        '/person/$peopleid/combined_credits?api_key=$_apikey&language=en-US';
     final r = await _http.request<CombinedCreditsModel>(param, cached: true);
     return r;
   }

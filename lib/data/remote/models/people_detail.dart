@@ -19,7 +19,9 @@ class PeopleDetailModel {
   ProfileImages images;
 
   List<String> alsoKnownAs;
+  PeopleDetailModel.empty() {
 
+  }
   PeopleDetailModel.fromParams(
       {this.deathday,
       this.homepage,

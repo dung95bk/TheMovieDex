@@ -79,14 +79,14 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                     label: "Celeb"
 
                 ),
-                BottomNavigationBarItem(
-                    icon: ImageIcon(
-                      provider.currentIndex == 4
-                          ? AssetImage(R.img_ic_tab_more_active)
-                          : AssetImage(R.img_ic_tab_more_inactive),
-                    ),
-                    label: "More"
-                ),
+                // BottomNavigationBarItem(
+                //     icon: ImageIcon(
+                //       provider.currentIndex == 4
+                //           ? AssetImage(R.img_ic_tab_more_active)
+                //           : AssetImage(R.img_ic_tab_more_inactive),
+                //     ),
+                //     label: "More"
+                // ),
               ],
               currentIndex: provider.currentIndex,
               selectedItemColor: AppTheme.item_bottomNavigation_selected,

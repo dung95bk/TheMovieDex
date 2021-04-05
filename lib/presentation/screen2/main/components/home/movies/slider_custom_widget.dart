@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:themoviedex/data/remote/models/enums/imagesize.dart';
 import 'package:themoviedex/data/remote/models/models.dart';
+import 'package:themoviedex/generated/r.dart';
 import 'package:themoviedex/presentation/screen2/main/components/home/movies/custom_pageview_widget.dart';
 import 'package:themoviedex/presentation/screen2/main/components/home/movies/slider_custom_widget_provider.dart';
 import 'package:themoviedex/presentation/util/adapt.dart';
@@ -185,15 +186,17 @@ class _SliderCustomWidgetState extends State<SliderCustomWidget> {
                   fit: BoxFit.cover,
                   height: itemSliderWidth,
                   width: itemSliderWidth,
-                  placeholder: (context, url) => Container(
+                  placeholder: (context, url) => Image.asset(R.img_image_thumb,
                     width: itemSliderWidth,
                     height: itemSliderWidth,
-                    color: AppTheme.image_place_holder,
+                    fit: BoxFit.cover,
+
                   ),
-                  errorWidget: (context, url, error) => Container(
+                  errorWidget: (context, url, error) => Image.asset(R.img_image_thumb,
                     width: itemSliderWidth,
                     height: itemSliderWidth,
-                    color: AppTheme.image_place_holder,
+                    fit: BoxFit.cover,
+
                   ),
                 ),
               ),

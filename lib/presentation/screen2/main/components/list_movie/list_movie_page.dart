@@ -207,16 +207,18 @@ class _ListMoviePageState extends State<ListMoviePage> {
                 fit: BoxFit.cover,
                 width: widthItemGrid,
                 height: double.infinity,
-                placeholder: (context, url) => Container(
+                placeholder: (context, url) => Image.asset(R.img_image_thumb,
                   width: widthItemGrid,
                   height: heightItemGrid,
-                  color: AppTheme.image_place_holder,
+                  fit: BoxFit.cover,
+
                 ),
                 errorWidget: (context, url, error) =>
-                    Container(
-                      width: heightItemGrid,
+                    Image.asset(R.img_image_thumb,
+                      width: widthItemGrid,
                       height: heightItemGrid,
-                      color: AppTheme.image_place_holder,
+                      fit: BoxFit.cover,
+
                     ),
               ),
             ),

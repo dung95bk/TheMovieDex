@@ -4,10 +4,12 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:themoviedex/data/remote/models/enums/imagesize.dart';
 import 'package:themoviedex/data/remote/models/models.dart';
+import 'package:themoviedex/presentation/screen2/detail_celeb/detail_celeb_page.dart';
 import 'package:themoviedex/presentation/screen2/main/components/celeb/celeb_page_provider.dart';
 import 'package:themoviedex/presentation/util/adapt.dart';
 import 'package:themoviedex/presentation/util/app_theme.dart';
 import 'package:themoviedex/presentation/util/imageurl.dart';
+import 'package:themoviedex/presentation/util/navigator_util.dart';
 
 class CelebPage extends StatefulWidget {
   CelebPage({Key key}) : super(key: key);
@@ -108,7 +110,10 @@ class _CelebPageState extends State<CelebPage> {
 
   Widget buildItemGridView(SearchResult itemData) {
     return GestureDetector(
-      onTap: () async {},
+      onTap: () async {
+        NavigatorUtil.pushPage(context, DetailCelebPage(celebId: itemData.id,));
+
+      },
       child: Container(
         margin: EdgeInsets.all(5),
         alignment: Alignment.center,

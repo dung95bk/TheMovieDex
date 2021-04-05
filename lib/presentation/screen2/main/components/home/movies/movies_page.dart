@@ -39,7 +39,6 @@ class _MoviesPageState extends State<MoviesPage> {
 
   @override
   void initState() {
-
     super.initState();
     marginList = Adapt.px(20);
     itemRowCategory = (Adapt.screenW() - marginList * 2) / 2;
@@ -48,12 +47,10 @@ class _MoviesPageState extends State<MoviesPage> {
     itemTopRatedHeight = itemTopRatedWidth / 3;
     itemTopRatedImageHeight = itemTopRatedHeight * 0.8;
     provider = SliderCustomWidgetProvider();
-
   }
 
   @override
   void dispose() {
-
     super.dispose();
   }
 
@@ -120,7 +117,12 @@ class _MoviesPageState extends State<MoviesPage> {
           GestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: () {
-              NavigatorUtil.pushPage(context, ListMoviePage(title: "Top Rated Movies", typeList: TYPE_LIST_MOVIE_TOP_RATED,));
+              NavigatorUtil.pushPage(
+                  context,
+                  ListMoviePage(
+                    title: "Top Rated Movies",
+                    typeList: TYPE_LIST_MOVIE_TOP_RATED,
+                  ));
             },
             child: Image.asset(
               R.img_ic_seemore,
@@ -190,7 +192,7 @@ class _MoviesPageState extends State<MoviesPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      width: itemTopRatedImageWidth/2,
+                      width: itemTopRatedImageWidth / 2,
                       height: 20,
                       color: AppTheme.item_list_background,
                     ),
@@ -198,7 +200,7 @@ class _MoviesPageState extends State<MoviesPage> {
                       height: 10,
                     ),
                     Container(
-                      width: itemTopRatedWidth/2,
+                      width: itemTopRatedWidth / 2,
                       height: 20,
                       color: AppTheme.item_list_background,
                     ),
@@ -237,15 +239,17 @@ class _MoviesPageState extends State<MoviesPage> {
                   fit: BoxFit.cover,
                   height: itemTopRatedImageHeight,
                   width: itemTopRatedImageWidth,
-                  placeholder: (context, url) => Container(
+                  placeholder: (context, url) => Image.asset(
+                        R.img_image_thumb,
                         height: itemTopRatedImageHeight,
                         width: itemTopRatedImageWidth,
-                        color: AppTheme.image_place_holder,
+                        fit: BoxFit.cover,
                       ),
-                  errorWidget: (context, url, error) => Container(
+                  errorWidget: (context, url, error) => Image.asset(
+                        R.img_image_thumb,
                         height: itemTopRatedImageHeight,
                         width: itemTopRatedImageWidth,
-                        color: AppTheme.image_place_holder,
+                        fit: BoxFit.cover,
                       )),
             ),
             SizedBox(
@@ -323,7 +327,12 @@ class _MoviesPageState extends State<MoviesPage> {
             child: GestureDetector(
               behavior: HitTestBehavior.translucent,
               onTap: () {
-                NavigatorUtil.pushPage(context, ListMoviePage(title: "Now Playing Movies", typeList: TYPE_LIST_MOVIE_NOW_PLAYING,));
+                NavigatorUtil.pushPage(
+                    context,
+                    ListMoviePage(
+                      title: "Now Playing Movies",
+                      typeList: TYPE_LIST_MOVIE_NOW_PLAYING,
+                    ));
               },
               child: Image.asset(
                 R.img_ic_nowplay,
@@ -338,7 +347,12 @@ class _MoviesPageState extends State<MoviesPage> {
             child: GestureDetector(
               behavior: HitTestBehavior.translucent,
               onTap: () {
-                NavigatorUtil.pushPage(context, ListMoviePage(title: "Popular Movies", typeList: TYPE_LIST_MOVIE_POPULAR,));
+                NavigatorUtil.pushPage(
+                    context,
+                    ListMoviePage(
+                      title: "Popular Movies",
+                      typeList: TYPE_LIST_MOVIE_POPULAR,
+                    ));
               },
               child: Image.asset(
                 R.img_ic_popularmovie,
@@ -354,10 +368,8 @@ class _MoviesPageState extends State<MoviesPage> {
   Widget buildSlider(SliderCustomWidgetProvider provider) {
     print("buildSlider");
 
-    return SliderCustomWidget(provider:  provider,);
+    return SliderCustomWidget(
+      provider: provider,
+    );
   }
-
-
-
 }
-
