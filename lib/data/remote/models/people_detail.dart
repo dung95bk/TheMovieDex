@@ -44,8 +44,9 @@ class PeopleDetailModel {
       : jsonStr is String
           ? new PeopleDetailModel.fromJson(json.decode(jsonStr))
           : new PeopleDetailModel.fromJson(jsonStr);
-
   PeopleDetailModel.fromJson(jsonRes) {
+    print(jsonRes);
+
     deathday = jsonRes['deathday'];
     homepage = jsonRes['homepage'];
     gender = jsonRes['gender'];

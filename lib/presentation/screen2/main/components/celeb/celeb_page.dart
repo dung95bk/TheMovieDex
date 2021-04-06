@@ -80,7 +80,9 @@ class _CelebPageState extends State<CelebPage> {
                 return buildShimmerGridItem();
               } else {
                 SearchResult itemData = provider.listPeople[index];
-                return buildItemGridView(itemData);
+                print("Hero${index}:${itemData.id}");
+
+                return buildItemGridView(itemData, index);
               }
             },
           ),
@@ -108,39 +110,46 @@ class _CelebPageState extends State<CelebPage> {
     });
   }
 
-  Widget buildItemGridView(SearchResult itemData) {
-    return GestureDetector(
-      onTap: () async {
-        NavigatorUtil.pushPage(context, DetailCelebPage(celebId: itemData.id,));
+  Widget buildItemGridView(SearchResult itemData, int index) {
+    return Hero(
+      tag: index,
 
-      },
-      child: Container(
-        margin: EdgeInsets.all(5),
-        alignment: Alignment.center,
-        height: double.infinity,
-        width: double.infinity,
-        child: Stack(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-              child: CachedNetworkImage(
-                imageUrl: ImageUrl.getUrl(itemData.profilePath, ImageSize.w300),
-                fit: BoxFit.cover,
-                width: widthItemGrid,
-                height: double.infinity,
-                placeholder: (context, url) => Container(
-                  width: widthItemGrid,
-                  height: heightItemGrid,
-                  color: AppTheme.image_place_holder,
+      child: Material(
+        color: AppTheme.bottomNavigationBarBackground_light,
+        child: InkWell(
+          onTap: () {
+            NavigatorUtil.pushPage(context, DetailCelebPage(celebId: itemData.id,urlAvatar: itemData.profilePath, animationTag: index));
+
+          },
+          child: Container(
+            margin: EdgeInsets.all(5),
+            alignment: Alignment.center,
+            height: double.infinity,
+            width: double.infinity,
+            child: Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  child: CachedNetworkImage(
+                    imageUrl: ImageUrl.getUrl(itemData.profilePath, ImageSize.w300),
+                    fit: BoxFit.cover,
+                    width: widthItemGrid,
+                    height: double.infinity,
+                    placeholder: (context, url) => Container(
+                      width: widthItemGrid,
+                      height: heightItemGrid,
+                      color: AppTheme.image_place_holder,
+                    ),
+                    errorWidget: (context, url, error) => Container(
+                      width: heightItemGrid,
+                      height: heightItemGrid,
+                      color: AppTheme.image_place_holder,
+                    ),
+                  ),
                 ),
-                errorWidget: (context, url, error) => Container(
-                  width: heightItemGrid,
-                  height: heightItemGrid,
-                  color: AppTheme.image_place_holder,
-                ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

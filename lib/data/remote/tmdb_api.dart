@@ -849,7 +849,7 @@ class TMDBApi {
 
   Future<ResponseModel<PeopleDetailModel>> getPeopleDetail(int peopleid,
       {String appendToResponse}) async {
-    String param = '/person/${peopleid}?api_key=$_apikey&language=$_language';
+    String param = '/person/${peopleid}?api_key=$_apikey';
     if (appendToResponse != null)
       param += '&append_to_response=$appendToResponse';
     final r = await _http.request<PeopleDetailModel>(param, cached: true);

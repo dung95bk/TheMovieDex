@@ -23,22 +23,72 @@ class SearchPage extends StatefulWidget {
   }
 }
 
-class _SearchPageState extends State<SearchPage> {
+class _SearchPageState extends State<SearchPage> with WidgetsBindingObserver{
   bool isShowSuggest = true;
   SearchPageProvider provider;
-
+  FocusNode inputFocusNode = FocusNode(debugLabel: 'Close Backdrop Button');
   @override
   void initState() {
     super.initState();
     provider = Provider.of<SearchPageProvider>(context, listen: false);
     provider.initSearchController();
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
+    print("search :dispose");
+    inputFocusNode.dispose();
     provider.editingController.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
+
+
+  @override
+  void didChangeDependencies() {
+    print("search :didChangeDependencies");
+
+  }
+
+
+  @override
+  void setState(VoidCallback fn) {
+    print("search :setState");
+  }
+
+  @override
+  void deactivate() {
+    print("search :deactivate");
+    super.deactivate();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    switch (state) {
+      case AppLifecycleState.resumed:
+        print("search :resumed");
+        break;
+      case AppLifecycleState.inactive:
+        print("search :inactive");
+        // widget is inactive
+        break;
+      case AppLifecycleState.paused:
+        FocusManager.instance.primaryFocus.unfocus();
+
+        print("search :paused");
+        // widget is paused
+        break;
+      case AppLifecycleState.detached:
+        print("search :detached");
+
+        // widget is detached
+        break;
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -132,6 +182,7 @@ class _SearchPageState extends State<SearchPage> {
                         controller: provider.editingController,
                         onSubmitted: (newValue) {},
                         autofocus: false,
+                        focusNode: inputFocusNode,
                       ),
                     ),
                     SizedBox(

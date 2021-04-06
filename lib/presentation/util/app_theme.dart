@@ -31,6 +31,7 @@ class AppTheme {
   static const Color item_list_background =  Color(0xFF979797);
   static const Color image_place_holder =  Color(0xFFE2E2E2);
   static const Color bg_rank_top_rate =  Color(0xFF900101);
+  static const Color bg_divider =  Color(0xFFD8D8D8);
 
 
 }

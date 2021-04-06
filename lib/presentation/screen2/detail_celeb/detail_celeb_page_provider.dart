@@ -4,6 +4,7 @@ import 'package:themoviedex/data/remote/models/external_id_models.dart';
 import 'package:themoviedex/data/remote/models/external_ids_model.dart';
 import 'package:themoviedex/data/remote/models/models.dart';
 import 'package:themoviedex/data/remote/tmdb_api.dart';
+import 'package:themoviedex/presentation/screen2/detail_celeb/acting_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetailCelebPageProvider extends ChangeNotifier {
@@ -11,6 +12,9 @@ class DetailCelebPageProvider extends ChangeNotifier {
   ExternalIdModels externalIdsModel = ExternalIdModels.empty();
   bool isLoading = false;
   int celebId;
+  List<CombinedCastData> listKnowForAll = List<CombinedCastData>();
+  List<ActingModel> listActing = List<ActingModel>();
+
   DetailCelebPageProvider(this.celebId) {
     loadDetail();
   }
@@ -46,8 +50,32 @@ class DetailCelebPageProvider extends ChangeNotifier {
         });
 
         var _model = _combinedCredits.result.cast ?? [];
+        listKnowForAll.addAll(_model);
         var movies = _model.where((d) => d.mediaType == 'movie').toList();
         var tvshows = _model.where((d) => d.mediaType == 'tv').toList();
+        for(int index = 0; index < listKnowForAll.length; index++) {
+
+          String date = listKnowForAll[index].mediaType == 'movie'
+              ? listKnowForAll[index].releaseDate
+              : listKnowForAll[index].firstAirDate;
+          date = date == null || date?.isEmpty == true
+              ? '-'
+              : DateTime.parse(date).year.toString();
+          String title = listKnowForAll[index].title ?? listKnowForAll[index].name;
+          if(listActing.isEmpty) {
+            listActing.add(ActingModel(date, title));
+          } else {
+            ActingModel lastItem = listActing.last;
+            if(index > 0 && lastItem.year == date) {
+              lastItem.tilte += "\n\n" +  title;
+            } else {
+              listActing.add(ActingModel(date, title));
+            }
+          }
+        }
+
+        notifyListeners();
+
       }
       var responseExternalIds = await _tmdb.getExternalIds(celebId);
       print("CelebDI ${celebId}");
@@ -55,8 +83,6 @@ class DetailCelebPageProvider extends ChangeNotifier {
       if(responseExternalIds.success) {
         externalIdsModel = responseExternalIds.result;
       }
-      print(responseExternalIds.result);
-      print(peopleDetailModel.toString());
       notifyListeners();
     }
   }
