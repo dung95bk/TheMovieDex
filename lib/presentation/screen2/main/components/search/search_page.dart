@@ -10,6 +10,7 @@ import 'package:themoviedex/presentation/screen2/main/components/home/tvshow/ite
 import 'package:themoviedex/presentation/screen2/main/components/list_movie/list_movie_page.dart';
 import 'package:themoviedex/presentation/screen2/main/components/search/search_page_provider.dart';
 import 'package:themoviedex/presentation/screen2/voice_search/voice_search_page.dart';
+import 'package:themoviedex/presentation/screen2/widgets/clear_focus_gesture.dart';
 import 'package:themoviedex/presentation/util/app_theme.dart';
 import 'package:themoviedex/presentation/util/const.dart';
 import 'package:themoviedex/presentation/util/navigator_util.dart';
@@ -219,9 +220,9 @@ class _SearchPageState extends State<SearchPage> with WidgetsBindingObserver{
                           ),
                         )
                       : (!provider.isEnterSuggestion
-                          ? GestureDetector(
+                          ? ClearFocusGestureDetector(
                               onTap: () {
-                                NavigatorUtil.pushPage(context, VoiceSearchPage());
+                                showVoiceSearchPage();
                               },
                               child: Image.asset(
                                 R.img_ic_search_voice,
@@ -235,5 +236,14 @@ class _SearchPageState extends State<SearchPage> with WidgetsBindingObserver{
         ),
       ),
     );
+  }
+
+  void showVoiceSearchPage() async {
+    final result = await NavigatorUtil.pushPage(context, VoiceSearchPage());
+    if(result != null && result is String) {
+      setState(() {
+        provider.enterSuggestion(result);
+      });
+    }
   }
 }

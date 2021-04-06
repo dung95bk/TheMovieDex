@@ -61,6 +61,10 @@ class NavigatorUtil {
     Navigator.of(context).pop();
   }
 
+  static popSinglePageResult(BuildContext context, Object result) {
+    Navigator.of(context).pop(result);
+  }
+
   static exitApp(BuildContext context) {
     exit(0);
   }

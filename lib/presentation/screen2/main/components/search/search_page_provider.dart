@@ -37,13 +37,14 @@ class SearchPageProvider extends ChangeNotifier {
   }
 
 
-  void search() {
+  void search() async{
 
   }
 
   void enterSuggestion(String itemSuggest) {
     isEnterSuggestion = true;
     editingController.text = itemSuggest;
+
     notifyListeners();
   }
 

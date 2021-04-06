@@ -613,6 +613,13 @@ class TMDBApi {
     return r;
   }
 
+  Future<ResponseModel<ImageModel>> searchByKeyword(String keyword,
+      ) async {
+    final String param = '/search/$keyword?api_key=$_apikey';
+    final r = await _http.request<ImageModel>(param, cached: true);
+    return r;
+  }
+
   ///Get the images that belong to a movie.Querying images with a language parameter will filter the results. If you want to include a fallback language (especially useful for backdrops) you can use the include_image_language parameter. This should be a comma seperated value like so: include_image_language=en,null.
   Future<ResponseModel<ImageModel>> getMovieImages(int movieid,
       {String includelan = 'en,cn,jp'}) async {

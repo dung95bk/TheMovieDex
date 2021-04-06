@@ -6,6 +6,7 @@ import 'package:themoviedex/presentation/util/app_theme.dart';
 
 class TabbarHomeWidget extends StatefulWidget {
   PageController pageController;
+
   TabbarHomeWidget({Key key, @required this.pageController}) : super(key: key);
 
   @override
@@ -39,14 +40,14 @@ class _TabbarHomeWidgetState extends State<TabbarHomeWidget> {
   @override
   Widget build(BuildContext context) {
     final text = 'TV Show';
-    final style = TextStyle( fontSize: 16,
+    final style = TextStyle(fontSize: 16,
       fontWeight: FontWeight.w700,);
 
     TextPainter textPainter = TextPainter()
       ..text = TextSpan(text: text, style: style)
       ..textDirection = TextDirection.ltr
       ..layout(minWidth: 0, maxWidth: double.infinity);
-    double textPadding = Adapt.px(40) ;
+    double textPadding = Adapt.px(40);
     double sizeText = textPainter.size.width + textPadding * 2;
     print(textPainter.size); // Size(270.0, 43.0)
     return Center(
@@ -56,16 +57,18 @@ class _TabbarHomeWidgetState extends State<TabbarHomeWidget> {
 
           boxShadow: [BoxShadow(color: Colors.black)],
           color: Colors.grey.withAlpha(100),
-            borderRadius: BorderRadius.circular(40),
+          borderRadius: BorderRadius.circular(40),
         ),
         child: DefaultTabController(
           initialIndex: 0,
           length: 2,
           child: TabBar(
             indicatorSize: TabBarIndicatorSize.label,
-            labelPadding: EdgeInsets.all(0) ,
-            onTap: (int index) =>
-            {widget.pageController.jumpToPage(index)},
+            labelPadding: EdgeInsets.all(0),
+            onTap: (int index) {
+              FocusManager.instance.primaryFocus.unfocus();
+              widget.pageController.jumpToPage(index);
+            },
             indicator: BoxDecoration(
                 borderRadius: BorderRadius.circular(40),
                 color: Color(0xFFCE0000)),

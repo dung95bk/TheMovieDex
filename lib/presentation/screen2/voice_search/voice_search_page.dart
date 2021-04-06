@@ -224,6 +224,7 @@ class _SpeechScreenState extends State<SpeechScreen> {
             if (val.hasConfidenceRating && val.confidence > 0) {
               _confidence = val.confidence;
             }
+            NavigatorUtil.popSinglePageResult(context, textSuccess);
           }),
         );
       }
