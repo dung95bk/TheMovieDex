@@ -154,7 +154,9 @@ class SearchPageProvider extends ChangeNotifier {
   }
 
   void enterSuggestion(String itemSuggest) {
+    print("ABC");
     if(itemSuggest.isNotEmpty) {
+      print("ABC1");
       isEnterSuggestion = true;
       editingController.text = itemSuggest;
       print("enterSuggestion");

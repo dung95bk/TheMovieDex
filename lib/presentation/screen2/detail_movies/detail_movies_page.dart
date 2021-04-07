@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rubber/rubber.dart';
+import 'package:themoviedex/presentation/screen2/widgets/bottomsheet/flexible_bottom_sheet.dart';
 import 'package:themoviedex/presentation/screen2/widgets/bottomsheet/flexible_bottom_sheet_route.dart';
 import 'package:themoviedex/presentation/util/adapt.dart';
 
@@ -22,7 +23,7 @@ class _DetailMoviePageState extends State<DetailMoviePage> with SingleTickerProv
       duration: Duration(seconds: 1),
       vsync: this, // Thanks to the mixin
     );
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) { _showSheetWithoutList();});
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) { _showSheetWithoutList();});
     super.initState();
   }
 
@@ -45,6 +46,52 @@ class _DetailMoviePageState extends State<DetailMoviePage> with SingleTickerProv
             width: Adapt.screenW(),
             height: Adapt.screenH(),
             color: Colors.red,
+            child: FlexibleBottomSheet(
+              minHeight: .8,
+              initHeight: 0.8,
+              maxHeight: .9,
+              isCollapsible: false,
+              decoration: const BoxDecoration(
+                color: Colors.teal,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(40.0),
+                  topRight: Radius.circular(40.0),
+                ),
+              ),
+              headerBuilder: (context, offset) {
+                return AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  width: double.infinity,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    color: Colors.green,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(offset == 0.8 ? 0 : 40),
+                      topRight: Radius.circular(offset == 0.8 ? 0 : 40),
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Center(
+                          child: Text(
+                            'Header',
+                            style: Theme.of(context).textTheme.headline4,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        'position $offset',
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
+                    ],
+                  ),
+                );
+              },
+
+              anchors: [.2, 0.5, .8],
+            ),
           ),
         )
       ),

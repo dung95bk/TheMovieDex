@@ -272,10 +272,9 @@ class _SearchPageState extends State<SearchPage> with WidgetsBindingObserver {
 
   void showVoiceSearchPage() async {
     final result = await NavigatorUtil.pushPage(context, VoiceSearchPage());
-    if (result != null && result is String) {
-      setState(() {
+    print("resule ${result}");
+    if (result != null) {
         provider.enterSuggestion(result);
-      });
     }
   }
 }

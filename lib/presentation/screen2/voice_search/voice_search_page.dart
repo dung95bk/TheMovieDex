@@ -66,7 +66,7 @@ class _SpeechScreenState extends State<SpeechScreen> {
   bool _isError = false;
   double _confidence = 1.0;
   String textSuccess = "";
-
+  bool isFinish = false;
   @override
   void initState() {
     super.initState();
@@ -224,7 +224,12 @@ class _SpeechScreenState extends State<SpeechScreen> {
             if (val.hasConfidenceRating && val.confidence > 0) {
               _confidence = val.confidence;
             }
-            NavigatorUtil.popSinglePageResult(context, textSuccess);
+            print("result1: ${val.recognizedWords}");
+            if(!isFinish && textSuccess.isNotEmpty) {
+              isFinish = true;
+              print("result1: ${val.recognizedWords}");
+             NavigatorUtil.popSinglePageResult(context, textSuccess);
+            }
           }),
         );
       }
