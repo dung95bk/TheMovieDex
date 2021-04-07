@@ -156,7 +156,7 @@ class _SpeechScreenState extends State<SpeechScreen> {
     if (_isListening) {
       return buildTextWidget("Listening...");
     } else if (_isError) {
-      return buildTextWidget("Error");
+      return buildTextWidget("Try again!");
     } else if (textSuccess.isNotEmpty) {
       return buildTextWidget(textSuccess);
     } else {

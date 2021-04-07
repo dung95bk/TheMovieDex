@@ -11,7 +11,9 @@ class ClearFocusGestureDetector extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         FocusManager.instance.primaryFocus.unfocus();
-        onTap();
+        if(onTap != null) {
+          onTap();
+        }
       },
       child: child,
     );

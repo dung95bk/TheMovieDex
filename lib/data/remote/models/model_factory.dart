@@ -1,4 +1,5 @@
 import 'package:themoviedex/data/remote/models/external_id_models.dart';
+import 'package:themoviedex/presentation/screen2/main/components/search/multi_type_model.dart';
 
 import 'models.dart';
 
@@ -91,6 +92,8 @@ class ModelFactory {
         return StripeCharges(json) as T;
       case 'ExternalIdModels':
         return ExternalIdModels(json) as T;
+      case 'MultiTypeModel':
+        return MultiTypeModel(json) as T;
       default:
         return json;
     }

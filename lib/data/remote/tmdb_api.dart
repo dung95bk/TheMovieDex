@@ -8,6 +8,7 @@ import 'package:themoviedex/data/remote/models/enums/media_type.dart';
 import 'package:themoviedex/data/remote/models/enums/time_window.dart';
 import 'package:themoviedex/data/remote/models/external_id_models.dart';
 import 'package:themoviedex/data/remote/models/external_ids_model.dart';
+import 'package:themoviedex/presentation/screen2/main/components/search/multi_type_model.dart';
 
 import 'models/models.dart';
 import 'request.dart';
@@ -613,10 +614,11 @@ class TMDBApi {
     return r;
   }
 
-  Future<ResponseModel<ImageModel>> searchByKeyword(String keyword,
-      ) async {
-    final String param = '/search/$keyword?api_key=$_apikey';
-    final r = await _http.request<ImageModel>(param, cached: true);
+  Future<ResponseModel<SearchResultModel>> searchByKeyword(String query,
+      {int page = 1, bool searchadult = false}) async {
+    final String param =
+        '/search/multi?api_key=$_apikey&query=$query&page=$page&include_adult=$_includeAdult&language=$_language';
+    final r = await _http.request<SearchResultModel>(param, cached: true);
     return r;
   }
 
