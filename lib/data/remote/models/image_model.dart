@@ -5,7 +5,7 @@ class ImageModel {
   int id;
   List<ImageData> backdrops;
   List<ImageData> posters;
-
+  ImageModel.empty();
   ImageModel.fromParams({this.id, this.backdrops, this.posters});
 
   factory ImageModel(jsonStr) => jsonStr == null ? null : jsonStr is String ? new ImageModel.fromJson(json.decode(jsonStr)) : new ImageModel.fromJson(jsonStr);

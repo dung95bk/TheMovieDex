@@ -37,7 +37,7 @@ dependencies:
   flutter_keyboard_visibility: ^4.0.4
   rubber: ^0.5.0
   flutter_swiper: ^1.1.6
-
+  video_player: ^1.0.1
   hive_flutter: ^0.3.1
   package_info: ^0.4.3+2
   photo_view: ^0.10.3

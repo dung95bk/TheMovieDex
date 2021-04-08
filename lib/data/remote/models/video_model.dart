@@ -4,7 +4,7 @@ class VideoModel {
 
   int id;
   List<VideoResult> results;
-
+  VideoModel.empty();
   VideoModel.fromParams({this.id, this.results});
 
   factory VideoModel(jsonStr) => jsonStr == null ? null : jsonStr is String ? new VideoModel.fromJson(json.decode(jsonStr)) : new VideoModel.fromJson(jsonStr);
