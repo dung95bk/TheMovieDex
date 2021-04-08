@@ -47,7 +47,7 @@ class _StateItemCustomWidget extends State<ItemTVShowWidget> {
       return GestureDetector(
         onTap: () {
           print("asdad");
-          NavigatorUtil.pushPage(context, DetailMoviePage());
+          NavigatorUtil.pushPage(context, DetailMoviePage(movieId: itemData.id,));
         },
         child: ChangeNotifierProvider(
           create: (context) => ItemCustomModel(),

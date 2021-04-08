@@ -84,4 +84,5 @@ class ListMoviePageProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+
 }

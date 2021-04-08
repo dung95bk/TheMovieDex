@@ -46,7 +46,7 @@ class MovieDetailModel {
   ReviewModel reviews;
   ExternalIdsModel externalIds;
   ReleaseDateModel releaseDates;
-
+  MovieDetailModel.empty();
   MovieDetailModel.fromParams(
       {this.homepage,
       this.budget,
@@ -81,6 +81,7 @@ class MovieDetailModel {
       this.externalIds,
       this.releaseDates,
       this.videos});
+
 
   factory MovieDetailModel(jsonStr) => jsonStr == null
       ? null
