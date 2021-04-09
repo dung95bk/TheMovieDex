@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:themoviedex/data/model/local/task_model.dart';
 import 'package:themoviedex/domain/model/guide_model_domain.dart';
@@ -72,15 +71,7 @@ class _DetailTaskPageState extends State<DetailTaskPage> {
   }
 
   Widget getDescription(String description) {
-    if (description == null) {
-      return Html(
-        data: "",
-      );
-    } else {
-      return Html(
-        data: description,
-      );
-    }
+    return Container();
   }
 
   buildAppBar(String title) {

@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
+// import 'package:flutter_html/flutter_html.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:themoviedex/data/model/local/ablities_model.dart';
 import 'package:themoviedex/data/model/local/expand_model.dart';
@@ -170,11 +170,7 @@ class _ListExpandableAbilitiesState extends State<ListExpandableAbilities> {
         ),
         child: Column(
           children: [
-            mapModel.description != null
-                ? Html(
-                    data: mapModel.description,
-                  )
-                : Text(""),
+
           ],
         ),
       );

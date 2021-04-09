@@ -5,6 +5,7 @@ class R {
 	static const String img_ic_category = "assets/img/ic_category.jpg";
 	static const String img_ic_clock = "assets/img/ic_clock.png";
 	static const String img_ic_close = "assets/img/ic_close.png";
+	static const String img_ic_close_video = "assets/img/ic_close_video.png";
 	static const String img_ic_favourite = "assets/img/ic_favourite.png";
 	static const String img_ic_favourite_active = "assets/img/ic_favourite_active.png";
 	static const String img_ic_grid_active = "assets/img/ic_grid_active.png";

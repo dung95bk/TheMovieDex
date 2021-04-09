@@ -38,42 +38,46 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     MainPageProvider provider =
         Provider.of<MainPageProvider>(context, listen: false);
-    return Builder(
-      builder: (context) {
+    return OrientationBuilder(
+      builder: (context, orientation) {
         Adapt.initContext(context);
-        final pageController = PageController();
-        final _lightTheme = ThemeData.light().copyWith(
-            backgroundColor: Colors.white,
-            tabBarTheme: TabBarTheme(
-                labelColor: Color(0XFF505050),
-                unselectedLabelColor: Colors.grey));
-        final _darkTheme = ThemeData.dark().copyWith(
-            backgroundColor: Color(0xFF303030),
-            tabBarTheme: TabBarTheme(
-                labelColor: Colors.white, unselectedLabelColor: Colors.grey));
-        final MediaQueryData _mediaQuery = MediaQuery.of(context);
-        final ThemeData _theme =
+        return  Builder(
+          builder: (context) {
+            final pageController = PageController();
+            final _lightTheme = ThemeData.light().copyWith(
+                backgroundColor: Colors.white,
+                tabBarTheme: TabBarTheme(
+                    labelColor: Color(0XFF505050),
+                    unselectedLabelColor: Colors.grey));
+            final _darkTheme = ThemeData.dark().copyWith(
+                backgroundColor: Color(0xFF303030),
+                tabBarTheme: TabBarTheme(
+                    labelColor: Colors.white, unselectedLabelColor: Colors.grey));
+            final MediaQueryData _mediaQuery = MediaQuery.of(context);
+            final ThemeData _theme =
             _mediaQuery.platformBrightness == Brightness.light
                 ? _lightTheme
                 : _darkTheme;
-        Widget _buildPage(Widget page) {
-          return KeepAliveWidget(page);
-        }
+            Widget _buildPage(Widget page) {
+              return KeepAliveWidget(page);
+            }
 
-        return Scaffold(
-            extendBody: false,
-            backgroundColor: AppTheme.bottomNavigationBarBackground_light,
-            body: PageView(
-                physics: NeverScrollableScrollPhysics(),
-                children: pages.map(_buildPage).toList(),
-                controller: pageController,
-                onPageChanged: (int i) => {}),
-            bottomNavigationBar: CustomBottomNavigationBar(
-              bottomNavigationKey: provider.bottomNavigationKey,
-              pageChange: (index) {
-                pageController.jumpToPage(index);
-              },
-            ));
+            return Scaffold(
+                extendBody: false,
+                backgroundColor: AppTheme.bottomNavigationBarBackground_light,
+                body: PageView(
+                    physics: NeverScrollableScrollPhysics(),
+                    children: pages.map(_buildPage).toList(),
+                    controller: pageController,
+                    onPageChanged: (int i) => {}),
+                bottomNavigationBar: CustomBottomNavigationBar(
+                  bottomNavigationKey: provider.bottomNavigationKey,
+                  pageChange: (index) {
+                    pageController.jumpToPage(index);
+                  },
+                ));
+          },
+        );
       },
     );
   }

@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:themoviedex/data/model/local/expand_model.dart';
 import 'package:themoviedex/domain/model/guide_model_domain.dart';
@@ -123,7 +122,7 @@ class _ListExpandableState extends State<ListExpandable> {
             SizedBox(
               height: 15.0,
             ),
-            mapModel.description != null ? Html(data: mapModel.description) : Text(""),
+
             SizedBox(
               height: 10.0,
             ),

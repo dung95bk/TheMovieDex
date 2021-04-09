@@ -1,7 +1,9 @@
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:provider/provider.dart';
 import 'package:rubber/rubber.dart';
@@ -22,6 +24,7 @@ import 'package:themoviedex/presentation/util/app_theme.dart';
 import 'package:themoviedex/presentation/util/imageurl.dart';
 import 'package:themoviedex/presentation/util/navigator_util.dart';
 import 'package:video_player/video_player.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class DetailMoviePage extends StatefulWidget {
   int movieId;
@@ -49,11 +52,18 @@ class _DetailMoviePageState extends State<DetailMoviePage>
   double heightItemImage;
 
   //trailer
-  VideoPlayerController vc;
+
   String coverurl;
   int playtime;
   int duration;
 
+  // screen
+  double _padding;
+  double _width;
+  double _height;
+  bool isShowClose = false;
+  AnimationController controller;
+  Animation<Offset> offset;
 
   @override
   void initState() {
@@ -65,144 +75,244 @@ class _DetailMoviePageState extends State<DetailMoviePage>
     //images
     widthItemImage = (Adapt.screenW() - Adapt.px(20)) / 1.5;
     heightItemImage = widthItemImage * 9 / 16;
+    controller = AnimationController(
+        vsync: this,
+        duration: Duration(milliseconds: 600),reverseDuration: Duration(milliseconds: 600)
+        );
+
+    offset = Tween<Offset>(begin: Offset(0, 20), end: Offset(0, -20))
+        .animate(controller);
   }
 
   @override
   void dispose() {
+    if (provider.youtubePlayerController != null) {
+      provider.youtubePlayerController.dispose();
+    }
     super.dispose();
+  }
+
+  Future<bool> _checkForLandscape(BuildContext ctx) async {
+    await SystemChrome.setPreferredOrientations(
+      [
+        DeviceOrientation.portraitUp,
+      ],
+    );
+    return true;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
     heightItemCast = heightImageCast + 3 * Adapt.px(10) + 2 * 16;
     backLayerHeight = Adapt.screenH() * 0.3 + 50;
-    return SafeArea(
-        child: Scaffold(
-            body: ChangeNotifierProvider.value(
-                value: provider,
-                builder: (context, child) {
-                  return NotificationListener<DraggableScrollableNotification>(
-                    onNotification: (notification) {
-                      _pageNotifier.value = notification.extent;
-                      print("Extent: ${notification.extent}");
-                      setState(() {});
-                    },
-                    child: Stack(
-                      children: <Widget>[
-                        Container(
-                            color: Colors.black,
+    _padding = Adapt.px(40);
+    _width = Adapt.screenW() - _padding * 2;
+    _height = _width * 9 / 16;
+    return WillPopScope(
+      onWillPop: () => _checkForLandscape(context),
+      child: SafeArea(
+          child: Scaffold(
+              body: ChangeNotifierProvider.value(
+                  value: provider,
+                  builder: (context, child) {
+                    return NotificationListener<
+                        DraggableScrollableNotification>(
+                      onNotification: (notification) {
+                        _pageNotifier.value = notification.extent;
+                        print("Extent: ${notification.extent}");
+                        setState(() {});
+                      },
+                      child: Stack(
+                        children: <Widget>[
+                          Container(
+                              color: Colors.black,
+                              child: Consumer(
+                                builder: (context,
+                                    DetailMoviePageProvider provider, child) {
+                                  return buildBackChild();
+                                },
+                              )),
+                          DraggableScrollableSheet(
+                              initialChildSize: 0.70,
+                              minChildSize: 0.70,
+                              maxChildSize: 0.9,
+                              builder: (BuildContext context,
+                                  ScrollController scrollController) {
+                                return Container(
+                                  padding: EdgeInsets.only(top: 20),
+                                  decoration: BoxDecoration(
+                                    color:
+                                        AppTheme.bottomNavigationBarBackgroundt,
+                                    borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(20),
+                                    ),
+                                  ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Expanded(
+                                        child: Consumer(
+                                          builder: (context,
+                                              DetailMoviePageProvider provider,
+                                              child) {
+                                            return LayoutBuilder(
+                                              builder: (context, constraints) {
+                                                double maxHeight =
+                                                    constraints.maxHeight;
+                                                return ListView(
+                                                  controller: scrollController,
+                                                  physics:
+                                                      ClampingScrollPhysics(),
+                                                  children: [
+                                                    buildImage(maxHeight),
+                                                    Container(
+                                                      child: Text(
+                                                        "Cast",
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 20,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                      margin: EdgeInsets.only(
+                                                          left: 20),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    buildCast(),
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    Container(
+                                                      margin: EdgeInsets.only(
+                                                          left: 20),
+                                                      child: Text(
+                                                        "Overview",
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 20,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    Container(
+                                                        margin: EdgeInsets.only(
+                                                            left: 20,
+                                                            right: 20),
+                                                        child: buildOverview()),
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    Container(
+                                                      margin: EdgeInsets.only(
+                                                          left: 20),
+                                                      child: Text(
+                                                        "Images",
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 20,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    buildImageList(),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                      buildBottomWidget()
+                                    ],
+                                  ),
+                                );
+                              }),
+                          GestureDetector(
+                            onTap: () {
+                              print("showclose");
+                              // setState(() {});
+                              if (isShowClose) {
+                                controller.forward();
+                              } else {
+                                controller.reverse();
+                              }
+                              isShowClose = !isShowClose;
+                            },
                             child: Consumer(
                               builder: (context,
                                   DetailMoviePageProvider provider, child) {
-                                return buildBackChild();
+                                return provider.isShowTrailerLayout
+                                    ? Container(
+                                        height: Adapt.screenH(),
+                                        width: Adapt.screenW(),
+                                        color: Colors.black,
+                                        child: Stack(
+                                          children: [
+                                            SlideTransition(
+                                              position: offset,
+
+                                              child: AnimatedContainer(
+                                                duration: Duration(seconds: 3),
+                                                alignment:
+                                                    Alignment.bottomCenter,
+                                                margin:
+                                                    EdgeInsets.only(bottom: 20),
+                                                child: GestureDetector(
+                                                    onTap: () {
+                                                      _checkForLandscape(
+                                                          context);
+                                                      NavigatorUtil
+                                                          .popSinglePage(
+                                                              context);
+                                                    },
+                                                    child: Image.asset(
+                                                      R.img_ic_close_video,
+                                                      width: 60,
+                                                      height: 60,
+                                                    )),
+                                              ),
+                                            ),
+                                            provider.isHasVideoData
+                                                ? Container(
+                                                    alignment: Alignment.center,
+                                                    child: _VideoPlayer(
+                                                      controller: provider
+                                                          .youtubePlayerController,
+                                                      play: true,
+                                                      onEnd: () => provider
+                                                          .startPlayVideo(
+                                                              false),
+                                                    ),
+                                                  )
+                                                : SizedBox()
+                                          ],
+                                        ),
+                                      )
+                                    : SizedBox();
                               },
-                            )),
-                        DraggableScrollableSheet(
-                            initialChildSize: 0.70,
-                            minChildSize: 0.70,
-                            maxChildSize: 0.9,
-                            builder: (BuildContext context,
-                                ScrollController scrollController) {
-                              return Container(
-                                padding: EdgeInsets.only(top: 20),
-                                decoration: BoxDecoration(
-                                  color:
-                                      AppTheme.bottomNavigationBarBackgroundt,
-                                  borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(20),
-                                  ),
-                                ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Expanded(
-                                      child: Consumer(
-                                        builder: (context,
-                                            DetailMoviePageProvider provider,
-                                            child) {
-                                          return LayoutBuilder(
-                                            builder: (context, constraints) {
-                                              double maxHeight =
-                                                  constraints.maxHeight;
-                                              return ListView(
-                                                controller: scrollController,
-                                                physics:
-                                                    ClampingScrollPhysics(),
-                                                children: [
-                                                  buildImage(maxHeight),
-                                                  Container(
-                                                    child: Text(
-                                                      "Cast",
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 20,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                    margin: EdgeInsets.only(
-                                                        left: 20),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  buildCast(),
-                                                  SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  Container(
-                                                    margin: EdgeInsets.only(
-                                                        left: 20),
-                                                    child: Text(
-                                                      "Overview",
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 20,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  Container(
-                                                      margin: EdgeInsets.only(
-                                                          left: 20, right: 20),
-                                                      child: buildOverview()),
-                                                  SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  Container(
-                                                    margin: EdgeInsets.only(
-                                                        left: 20),
-                                                    child: Text(
-                                                      "Images",
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 20,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  buildImageList(),
-                                                ],
-                                              );
-                                            },
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    buildBottomWidget()
-                                  ],
-                                ),
-                              );
-                            }),
-                      ],
-                    ),
-                  );
-                })));
+                            ),
+                          )
+                        ],
+                      ),
+                    );
+                  }))),
+    );
   }
 
   Widget buildBackChild() {
@@ -403,6 +513,28 @@ class _DetailMoviePageState extends State<DetailMoviePage>
     );
   }
 
+  // void playButtonClicked() {
+  //   if(!provider.isHasVideoData) return;
+  //   if (!provider.videoPlayerController.value.isInitialized) {
+  //     provider.videoPlayerController.initialize().then((_) {
+  //       setState(() {
+  //         showplayer = false;
+  //       });
+  //       provider.videoPlayerController.play();
+  //     });
+  //   } else if (!provider.videoPlayerController.value.isPlaying) {
+  //     setState(() {
+  //       showplayer = false;
+  //     });
+  //     provider.videoPlayerController.play();
+  //   } else {
+  //     setState(() {
+  //       showplayer = true;
+  //     });
+  //     provider.videoPlayerController.pause();
+  //   }
+  // }
+
   Widget buildBottomWidget() {
     double extent = (_pageNotifier.value - 0.7) / 0.2;
     if (extent > 1.0) extent = 1.0;
@@ -415,24 +547,7 @@ class _DetailMoviePageState extends State<DetailMoviePage>
         ),
         GestureDetector(
           onTap: () {
-            if (!vc.value.initialized) {
-              vc.initialize().then((_) {
-                setState(() {
-                  showplayer = false;
-                });
-                vc.play();
-              });
-            } else if (!vc.value.isPlaying) {
-              setState(() {
-                showplayer = false;
-              });
-              vc.play();
-            } else {
-              setState(() {
-                showplayer = true;
-              });
-              vc.pause();
-            }
+            provider.showTrailerLayout();
           },
           child: Container(
             alignment: Alignment.center,
@@ -447,7 +562,9 @@ class _DetailMoviePageState extends State<DetailMoviePage>
             child: Text(
               "Watch trailer",
               style: TextStyle(
-                  color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
             ),
           ),
         ),
@@ -728,5 +845,39 @@ class _DetailMoviePageState extends State<DetailMoviePage>
         ),
       ),
     );
+  }
+}
+
+class _VideoPlayer extends StatelessWidget {
+  final YoutubePlayerController controller;
+  final bool play;
+  final Function onEnd;
+
+  const _VideoPlayer({this.controller, this.play, this.onEnd});
+
+  @override
+  Widget build(BuildContext context) {
+    final double _padding = Adapt.px(40);
+    final _width = Adapt.screenW() - _padding * 2;
+    final _height = _width * 9 / 16;
+    return play
+        ? Container(
+            margin: EdgeInsets.symmetric(horizontal: _padding),
+            height: _height,
+            width: _width,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(Adapt.px(25)),
+              child: YoutubePlayer(
+                controller: controller,
+                onEnded: (d) => onEnd(),
+                progressColors: ProgressBarColors(
+                  playedColor: const Color(0xFFFFFFFF),
+                  handleColor: const Color(0xFFFFFFFF),
+                  bufferedColor: const Color(0xFFE0E0E0),
+                ),
+              ),
+            ),
+          )
+        : const SizedBox();
   }
 }

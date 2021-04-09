@@ -109,10 +109,19 @@ class _MyAppState extends State<MyApp> {
 
   }
   Future _init() async {
+    // SystemChrome.setPreferredOrientations([
+    //   DeviceOrientation.portraitDown,
+    //   DeviceOrientation.portraitUp,
+    // ]);
     print("init MyApp");
     await LocalConfig.instance.init(context);
     await ServerConfig.instance.init(context);
     await TMDBApi.instance.init();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
   }
   @override
   void dispose() {
