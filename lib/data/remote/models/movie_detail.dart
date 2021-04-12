@@ -3,12 +3,12 @@ import 'dart:convert' show json;
 import 'package:themoviedex/data/remote/models/production_companie.dart';
 import 'package:themoviedex/data/remote/models/release_date_model.dart';
 import 'package:themoviedex/data/remote/models/review.dart';
+import 'package:themoviedex/data/remote/models/tvshow_detail.dart';
 import 'package:themoviedex/data/remote/models/video_list.dart';
 import 'package:themoviedex/data/remote/models/video_model.dart';
 
 import 'credits_model.dart';
 import 'external_ids_model.dart';
-import 'genre.dart';
 import 'image_model.dart';
 import 'keyword.dart';
 

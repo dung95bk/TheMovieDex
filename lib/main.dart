@@ -34,27 +34,12 @@ import 'package:themoviedex/presentation/screen2/splash/splash_page.dart';
 import 'package:themoviedex/presentation/screen2/splash/splash_provider.dart';
 
 import 'data/helper/box_name.dart';
-void configLoading() {
-  EasyLoading.instance
 
-    ..displayDuration = const Duration(milliseconds: 2000)
-    ..indicatorType = EasyLoadingIndicatorType.fadingCircle
-    ..loadingStyle = EasyLoadingStyle.dark
-    ..indicatorSize = 45.0
-    ..radius = 10.0
-    ..progressColor = Colors.yellow
-    ..backgroundColor = Colors.black
-    ..indicatorColor = Colors.yellow
-    ..textColor = Colors.yellow
-    ..maskColor = Colors.blue.withOpacity(0.5)
-    ..userInteractions = true
-    ..dismissOnTap = false;
-}
 Future<void> main()  async {
-  WidgetsFlutterBinding.ensureInitialized();
   Hive.registerAdapter(ImageModeHiveAdapter());
   await Hive.initFlutter();
   await Hive.openBox<ImageModeHive>(BoxName.BOX_IMAGE);
+  await Hive.openBox<ImageModeHive>(BoxName.BOX_FAV_MOVIE);
   await Hive.openBox<String>(BoxName.BOX_DOWNLOADED_IMAGE_PATH);
   await Hive.openBox<String>(BoxName.BOX_SUGGEST_SEARCH);
 
@@ -103,16 +88,12 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
-    _init();
 
     super.initState();
+    _init();
 
   }
   Future _init() async {
-    // SystemChrome.setPreferredOrientations([
-    //   DeviceOrientation.portraitDown,
-    //   DeviceOrientation.portraitUp,
-    // ]);
     print("init MyApp");
     await LocalConfig.instance.init(context);
     await ServerConfig.instance.init(context);
@@ -142,7 +123,7 @@ class _MyAppState extends State<MyApp> {
           splashColor: Colors.transparent,
           accentColor: Colors.black
       ),
-      home: SplashPage(),
+      home: SplashPage(data: "data",),
       onGenerateRoute: routeHandler,
     );
   }

@@ -29,6 +29,7 @@ class _CategoryDetailPageState extends State<CategoryDetailPage> {
   void initState() {
     super.initState();
     boxImage = Hive.box<ImageModeHive>(BoxName.BOX_IMAGE);
+
   }
 
   @override

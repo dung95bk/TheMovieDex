@@ -10,8 +10,8 @@ import 'package:rubber/rubber.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:themoviedex/data/remote/models/credits_model.dart';
 import 'package:themoviedex/data/remote/models/enums/imagesize.dart';
-import 'package:themoviedex/data/remote/models/genre.dart';
 import 'package:themoviedex/data/remote/models/image_model.dart';
+import 'package:themoviedex/data/remote/models/models.dart';
 import 'package:themoviedex/data/remote/models/video_list.dart';
 import 'package:themoviedex/generated/r.dart';
 import 'package:themoviedex/presentation/screen2/detail_movies/detail_movies_page_provider.dart';
@@ -19,12 +19,15 @@ import 'package:themoviedex/presentation/screen2/main/components/home/movies/sli
 import 'package:themoviedex/presentation/screen2/widgets/backdrop.dart';
 import 'package:themoviedex/presentation/screen2/widgets/bottomsheet/flexible_bottom_sheet_route.dart';
 import 'package:themoviedex/presentation/screen2/widgets/expandable_text.dart';
+import 'package:themoviedex/presentation/screen2/widgets/share_card.dart';
 import 'package:themoviedex/presentation/util/adapt.dart';
 import 'package:themoviedex/presentation/util/app_theme.dart';
 import 'package:themoviedex/presentation/util/imageurl.dart';
 import 'package:themoviedex/presentation/util/navigator_util.dart';
+import 'package:themoviedex/presentation/util/screen_util.dart';
 import 'package:video_player/video_player.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'dart:ui' as ui;
 
 class DetailMoviePage extends StatefulWidget {
   int movieId;
@@ -77,11 +80,13 @@ class _DetailMoviePageState extends State<DetailMoviePage>
     heightItemImage = widthItemImage * 9 / 16;
     controller = AnimationController(
         vsync: this,
-        duration: Duration(milliseconds: 600),reverseDuration: Duration(milliseconds: 600)
-        );
+        duration: Duration(milliseconds: 300),
+        reverseDuration: Duration(milliseconds: 300));
 
-    offset = Tween<Offset>(begin: Offset(0, 20), end: Offset(0, -20))
-        .animate(controller);
+    offset = Tween<Offset>(
+      begin: Offset(0.0, 0.5),
+      end: Offset(0.0, 0.0),
+    ).animate(controller);
   }
 
   @override
@@ -98,7 +103,14 @@ class _DetailMoviePageState extends State<DetailMoviePage>
         DeviceOrientation.portraitUp,
       ],
     );
-    return true;
+    if(provider.isShowTrailerLayout) {
+      controller.reverse();
+      isShowClose = false;
+      provider.hideTrailerLayout();
+      return false;
+    } else {
+      return true;
+    }
   }
 
   @override
@@ -110,9 +122,8 @@ class _DetailMoviePageState extends State<DetailMoviePage>
   Widget build(BuildContext context) {
     heightItemCast = heightImageCast + 3 * Adapt.px(10) + 2 * 16;
     backLayerHeight = Adapt.screenH() * 0.3 + 50;
-    _padding = Adapt.px(40);
-    _width = Adapt.screenW() - _padding * 2;
-    _height = _width * 9 / 16;
+    Size viewsSize = MediaQuery.of(context).size;
+
     return WillPopScope(
       onWillPop: () => _checkForLandscape(context),
       child: SafeArea(
@@ -246,11 +257,10 @@ class _DetailMoviePageState extends State<DetailMoviePage>
                           GestureDetector(
                             onTap: () {
                               print("showclose");
-                              // setState(() {});
                               if (isShowClose) {
-                                controller.forward();
-                              } else {
                                 controller.reverse();
+                              } else {
+                                controller.forward();
                               }
                               isShowClose = !isShowClose;
                             },
@@ -259,14 +269,13 @@ class _DetailMoviePageState extends State<DetailMoviePage>
                                   DetailMoviePageProvider provider, child) {
                                 return provider.isShowTrailerLayout
                                     ? Container(
-                                        height: Adapt.screenH(),
-                                        width: Adapt.screenW(),
+                                        height: viewsSize.height,
+                                        width: viewsSize.width,
                                         color: Colors.black,
                                         child: Stack(
                                           children: [
                                             SlideTransition(
                                               position: offset,
-
                                               child: AnimatedContainer(
                                                 duration: Duration(seconds: 3),
                                                 alignment:
@@ -277,9 +286,9 @@ class _DetailMoviePageState extends State<DetailMoviePage>
                                                     onTap: () {
                                                       _checkForLandscape(
                                                           context);
-                                                      NavigatorUtil
-                                                          .popSinglePage(
-                                                              context);
+                                                      controller.reverse();
+                                                      isShowClose = false;
+                                                      provider.hideTrailerLayout();
                                                     },
                                                     child: Image.asset(
                                                       R.img_ic_close_video,
@@ -313,6 +322,79 @@ class _DetailMoviePageState extends State<DetailMoviePage>
                     );
                   }))),
     );
+  }
+  void _share(BuildContext context) {
+    Navigator.of(context).pop();
+    MovieDetailModel movieDetailModel = provider.movieDetailModel;
+    if(movieDetailModel == null) return;
+    showDialog(
+        context: context,
+        builder: (ctx) {
+          var width = (Adapt.screenW() - Adapt.px(60)).floorToDouble();
+          var height = ((width - Adapt.px(40)) / 2).floorToDouble();
+          return ShareCard(
+            backgroundImage: ImageUrl.getUrl(movieDetailModel.backdropPath, ImageSize.w300),
+            qrValue:
+            'https://www.themoviedb.org/movie/${movieDetailModel.id}?language=${ui.window.locale.languageCode}',
+            headerHeight: height,
+            header: Column(children: <Widget>[
+              SizedBox(
+                height: Adapt.px(20),
+              ),
+              Row(
+                children: <Widget>[
+                  SizedBox(
+                    width: Adapt.px(20),
+                  ),
+                  Container(
+                    width: Adapt.px(120),
+                    height: Adapt.px(120),
+                    decoration: BoxDecoration(
+                        border:
+                        Border.all(color: Colors.white, width: Adapt.px(5)),
+                        borderRadius: BorderRadius.circular(Adapt.px(60)),
+                        image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: CachedNetworkImageProvider(ImageUrl.getUrl(
+                                movieDetailModel.posterPath, ImageSize.w300)))),
+                  ),
+                  SizedBox(
+                    width: Adapt.px(20),
+                  ),
+                  Container(
+                    width: width - Adapt.px(310),
+                    child: Text(movieDetailModel.originalTitle,
+                        maxLines: 2,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: Adapt.px(40),
+                          fontWeight: FontWeight.bold,
+                        )),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: Adapt.px(20),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: Adapt.px(20)),
+                width: width - Adapt.px(40),
+                height: height - Adapt.px(170),
+                child: Text(movieDetailModel.overview,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 5,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: Adapt.px(26),
+                        shadows: <Shadow>[
+                          Shadow(
+                              offset: Offset(Adapt.px(1), Adapt.px(1)),
+                              blurRadius: 3)
+                        ])),
+              )
+            ]),
+          );
+        });
   }
 
   Widget buildBackChild() {
@@ -393,10 +475,15 @@ class _DetailMoviePageState extends State<DetailMoviePage>
               SizedBox(
                 width: 10,
               ),
-              Image.asset(
-                R.img_ic_favourite_active,
-                width: 40,
-                height: 40,
+              GestureDetector(
+                onTap: () {
+                  provider.favorite();
+                },
+                child: Image.asset(
+                  provider.isFavorite ? R.img_ic_favourite_active : R.img_ic_favourite,
+                  width: 40,
+                  height: 40,
+                ),
               ),
               SizedBox(
                 width: 20,
@@ -857,27 +944,41 @@ class _VideoPlayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double _padding = Adapt.px(40);
-    final _width = Adapt.screenW() - _padding * 2;
+    Size viewsSize = MediaQuery.of(context).size;
+    final _width = viewsSize.width;
     final _height = _width * 9 / 16;
     return play
-        ? Container(
-            margin: EdgeInsets.symmetric(horizontal: _padding),
-            height: _height,
-            width: _width,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(Adapt.px(25)),
-              child: YoutubePlayer(
+        ? GestureDetector(
+            onTap: () {
+              print("onTap");
+            },
+            child: YoutubePlayerBuilder(
+              player: YoutubePlayer(
                 controller: controller,
-                onEnded: (d) => onEnd(),
+                onEnded: (d) => controller.play(),
                 progressColors: ProgressBarColors(
                   playedColor: const Color(0xFFFFFFFF),
                   handleColor: const Color(0xFFFFFFFF),
                   bufferedColor: const Color(0xFFE0E0E0),
                 ),
               ),
+              builder: (context, widget) {
+                return Container(
+                  height: _height,
+                  width: _width,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(Adapt.px(25)),
+                    child: Stack(children: [widget, GestureDetector(onTap: () {
+                      print("onTapVideo");
+                    },child: Container(height: double.infinity,
+                      width:  double.infinity,))]),
+                  ),
+                );
+              },
             ),
           )
         : const SizedBox();
   }
+
+
 }
