@@ -3,7 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:themoviedex/data/config/LocalConfig.dart';
 import 'package:themoviedex/data/config/ServerConfig.dart';
+import 'package:themoviedex/data/model/local/favorite_movie_hive.dart';
 import 'package:themoviedex/data/model/local/image_model_hive.dart';
+import 'package:themoviedex/data/model/local/movie_item_list_hive.dart';
+import 'package:themoviedex/data/model/local/movie_item_list_hive.dart';
+import 'package:themoviedex/data/model/local/playlist_hive.dart';
 import 'package:themoviedex/data/remote/tmdb_api.dart';
 import 'package:themoviedex/presentation/custom_widgets/test_page_filter.dart';
 import 'package:themoviedex/presentation/route/route_handler.dart';
@@ -37,9 +41,15 @@ import 'data/helper/box_name.dart';
 
 Future<void> main()  async {
   Hive.registerAdapter(ImageModeHiveAdapter());
+  Hive.registerAdapter(FavoriteMovieHiveAdapter());
+  Hive.registerAdapter(PlayListHiveAdapter());
+  Hive.registerAdapter(MovieItemListHiveAdapter());
+
   await Hive.initFlutter();
   await Hive.openBox<ImageModeHive>(BoxName.BOX_IMAGE);
-  await Hive.openBox<ImageModeHive>(BoxName.BOX_FAV_MOVIE);
+  await Hive.openBox<FavoriteMovieHive>(BoxName.BOX_FAV_MOVIE);
+  await Hive.openBox<PlayListHive>(BoxName.BOX_PLAYLIST);
+  await Hive.openBox<MovieItemListHive>(BoxName.BOX_ITEM_PLAYLIST);
   await Hive.openBox<String>(BoxName.BOX_DOWNLOADED_IMAGE_PATH);
   await Hive.openBox<String>(BoxName.BOX_SUGGEST_SEARCH);
 
@@ -121,7 +131,9 @@ class _MyAppState extends State<MyApp> {
           primaryColor: Colors.black,
           highlightColor: Colors.transparent,
           splashColor: Colors.transparent,
-          accentColor: Colors.black
+          accentColor: Colors.black,
+        bottomSheetTheme:  BottomSheetThemeData(
+            backgroundColor: Colors.black.withOpacity(0)),
       ),
       home: SplashPage(data: "data",),
       onGenerateRoute: routeHandler,

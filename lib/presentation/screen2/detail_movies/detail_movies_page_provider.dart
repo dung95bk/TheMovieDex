@@ -2,7 +2,10 @@ import 'package:chewie/chewie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
 import 'package:themoviedex/data/helper/box_name.dart';
+import 'package:themoviedex/data/model/local/favorite_movie_hive.dart';
 import 'package:themoviedex/data/model/local/image_model_hive.dart';
+import 'package:themoviedex/data/model/local/movie_item_list_hive.dart';
+import 'package:themoviedex/data/model/local/playlist_hive.dart';
 import 'package:themoviedex/data/remote/models/enums/imagesize.dart';
 import 'package:themoviedex/data/remote/models/image_model.dart';
 import 'package:themoviedex/data/remote/models/models.dart';
@@ -10,7 +13,6 @@ import 'package:themoviedex/data/remote/models/movie_detail.dart';
 import 'package:themoviedex/data/remote/models/response_model.dart';
 import 'package:themoviedex/data/remote/models/video_list.dart';
 import 'package:themoviedex/data/remote/tmdb_api.dart';
-import 'file:///C:/Users/Admin/AndroidStudioProjects/themoviedex/lib/data/model/local/favorite_movie_hive.dart';
 import 'package:themoviedex/presentation/util/imageurl.dart';
 import 'package:themoviedex/presentation/util/videourl.dart';
 import 'package:video_player/video_player.dart';
@@ -23,7 +25,8 @@ class DetailMoviePageProvider extends ChangeNotifier {
   List<VideoResult> listVideo = [];
   bool isLoading = false;
   int movieId;
-
+  TextEditingController editingController = TextEditingController();
+  bool isEnableOk = false;
   // VideoPlayerController videoPlayerController;
   // ChewieController chewieController;
   YoutubePlayerController youtubePlayerController;
@@ -36,6 +39,7 @@ class DetailMoviePageProvider extends ChangeNotifier {
   bool isFavorite = false;
 
   DetailMoviePageProvider(this.movieId) {
+    editingController.addListener(() { isEnableOk = editingController.text.isNotEmpty; notifyListeners();});
     initData();
     getImage();
     getVideo();
@@ -50,9 +54,15 @@ class DetailMoviePageProvider extends ChangeNotifier {
     if (response.success) {
       movieDetailModel = response.result;
       isHasImageData = true;
-      isFav();
+      isFavorite = isFav();
       notifyListeners();
     }
+  }
+
+  @override
+  void dispose() {
+    editingController.dispose();
+    super.dispose();
   }
 
   void getImage() async {
@@ -65,10 +75,11 @@ class DetailMoviePageProvider extends ChangeNotifier {
   }
 
   void favorite() {
-    if (movieDetailModel == null) return;
+    if (movieDetailModel == null || movieDetailModel.id == null) return;
     var boxMovie = Hive.box<FavoriteMovieHive>(BoxName.BOX_FAV_MOVIE);
     var foundMovie = boxMovie.get(movieDetailModel.id);
     if (foundMovie == null) {
+      print('movieDetailModel.id');
       boxMovie.put(
           movieDetailModel.id,
           FavoriteMovieHive(movieDetailModel.id, movieDetailModel.originalTitle,
@@ -84,7 +95,31 @@ class DetailMoviePageProvider extends ChangeNotifier {
   bool isFav() {
     var boxMovie = Hive.box<FavoriteMovieHive>(BoxName.BOX_FAV_MOVIE);
     var foundMovie = boxMovie.get(movieDetailModel.id);
-    return foundMovie == null;
+    return foundMovie != null;
+  }
+
+  bool createPlayList() {
+    if(editingController.text.isNotEmpty) {
+      var playList = Hive.box<PlayListHive>(BoxName.BOX_PLAYLIST);
+      playList.add(PlayListHive(editingController.text, editingController.text, null));
+      print("Succes:${playList.values.length}");
+      editingController.clear();
+      return true;
+    }
+    return false;
+  }
+
+  bool isNameValidated() {
+    if(editingController.text.isNotEmpty) {
+      var playList = Hive.box<PlayListHive>(BoxName.BOX_PLAYLIST);
+      List<PlayListHive> list  = playList.values.toList();
+      for (int i =0; i < list.length; i++) {
+        if(list[i].id == editingController.text) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
   void getVideo() async {

@@ -146,6 +146,7 @@ class ShareCardState extends State<ShareCard> {
         });
   }
 
+
   void shareTapped() {
     screenshotController.capture().then((File image) async {
       ShareExtend.share(image.path, "image");
@@ -170,32 +171,12 @@ class ShareCardState extends State<ShareCard> {
               child: Container(
                 padding: EdgeInsets.only(top: height / 2 + Adapt.px(20)),
                 decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Colors.red,
                     borderRadius: BorderRadius.circular(Adapt.px(30))),
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      GestureDetector(
-                          onTap: () {},
-                          child: SizedBox(
-                            width: Adapt.px(200),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Icon(Icons.file_download),
-                                Text(
-                                  'DownLoad',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: Adapt.px(28),
-                                      fontWeight: FontWeight.bold),
-                                )
-                              ],
-                            ),
-                          )),
-                      SizedBox(
-                        width: Adapt.px(30),
-                      ),
+
                       GestureDetector(
                           onTap: shareTapped,
                           child: SizedBox(
@@ -203,11 +184,11 @@ class ShareCardState extends State<ShareCard> {
                             child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
-                                  Icon(Icons.share),
+                                  Icon(Icons.share,color: Colors.white,),
                                   Text('Share',
                                       style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: Adapt.px(28),
+                                          color: Colors.white,
+                                          fontSize: Adapt.px(32),
                                           fontWeight: FontWeight.bold))
                                 ]),
                           )),

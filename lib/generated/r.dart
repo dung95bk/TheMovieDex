@@ -1,6 +1,7 @@
 class R {
 	static const String img_close = "assets/img/close.png";
 	static const String img_ic_add = "assets/img/ic_add.png";
+	static const String img_ic_add_new = "assets/img/ic_add_new.png";
 	static const String img_ic_back = "assets/img/ic_back.png";
 	static const String img_ic_category = "assets/img/ic_category.jpg";
 	static const String img_ic_clock = "assets/img/ic_clock.png";

@@ -34,6 +34,7 @@ class AppTheme {
   static const Color bg_divider =  Color(0xFFD8D8D8);
   static const Color bg_star =  Color(0xFF213333);
   static const Color color_text_scroll =  Color(0xFF797E84);
+  static const Color transparent =  Color(0xFFFFFF);
 
 
 }

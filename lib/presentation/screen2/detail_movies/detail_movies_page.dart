@@ -5,6 +5,7 @@ import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:rubber/rubber.dart';
 import 'package:shimmer/shimmer.dart';
@@ -103,7 +104,7 @@ class _DetailMoviePageState extends State<DetailMoviePage>
         DeviceOrientation.portraitUp,
       ],
     );
-    if(provider.isShowTrailerLayout) {
+    if (provider.isShowTrailerLayout) {
       controller.reverse();
       isShowClose = false;
       provider.hideTrailerLayout();
@@ -111,6 +112,192 @@ class _DetailMoviePageState extends State<DetailMoviePage>
     } else {
       return true;
     }
+  }
+
+
+
+  void showAddMovieList() {
+    showModalBottomSheet(
+        context: context,
+        elevation: 20,
+        isScrollControlled: true,
+        builder: (context) {
+          return Container(
+              height:MediaQuery.of(context).viewInsets.bottom + 220 ,
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                Container(
+                  width: Adapt.screenW() / 5,
+                  height: 10,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20)),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: AppTheme.bottomNavigationBarBackgroundt,
+                      borderRadius: BorderRadius.only(
+                        topLeft: const Radius.circular(20),
+                        topRight: const Radius.circular(20),
+                      ),
+                    ),
+                    child: Column(
+
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            showAddMovieList();
+                          },
+                          child: Text(
+                            "Create new playlist",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                height: 1,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        SizedBox(height: 10,),
+                        Container(
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            border: Border.all(color: Color(0xFF666F7A), width: 1)
+                          ),
+                          child: TextField(
+                            controller: provider.editingController,
+                            decoration: InputDecoration(
+                              hintText: "Name playlist…",
+                              hintStyle:
+                                  TextStyle(color: Color(0xFF666F7A),decoration: TextDecoration.none, fontSize: 16),
+                              fillColor: Colors.white,
+                              hoverColor: Colors.white,
+                              focusColor: Colors.white,
+                              border: InputBorder.none
+                            ),
+                            style: TextStyle(color: Colors.white),
+                            onSubmitted: (newValue) {},
+                            autofocus: false,
+                          ),
+                        ),
+                        SizedBox(height: 10,),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: GestureDetector(
+                            onTap: () {
+                              if(provider.editingController.text.isEmpty) {
+                                showToast("Fill the name");
+                              } else if(!provider.isNameValidated()) {
+                                showToast("Name existed");
+                              } else {
+                                if (provider.createPlayList()) {
+                                  Navigator.pop(context);
+                                  showMovieList();
+                                }
+                              }
+                            },
+                            child: Opacity(
+                             opacity: 1,
+
+                              child: Container(
+                                padding: EdgeInsets.only(top: 10, bottom: 10, left: 40, right: 40),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                                    color: AppTheme.bg_rank_top_rate
+                                ),
+                                child: Text(
+                                  "OK",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    height: 1
+                                  ),
+                                )
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10,)
+                      ],
+                    ),
+                  ),
+                ),
+              ]));
+        });
+  }
+
+  void showToast(String text) {
+    Fluttertoast.showToast(
+        msg: text,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0
+    );
+  }
+
+  void showMovieList() {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+              height: Adapt.screenH() / 2,
+              child: Column(children: [
+                Container(
+                  width: Adapt.screenW() / 5,
+                  height: 10,
+                  decoration: BoxDecoration(
+                      color: Colors.black45,
+                      borderRadius: BorderRadius.circular(20)),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  padding: EdgeInsets.all(20),
+                  height: Adapt.screenH() / 2 - 20,
+                  decoration: BoxDecoration(
+                    color: AppTheme.bottomNavigationBarBackgroundt,
+                    borderRadius: BorderRadius.only(
+                      topLeft: const Radius.circular(20),
+                      topRight: const Radius.circular(20),
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Select playlists",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          GestureDetector(
+                              onTap: () {
+                                NavigatorUtil.popSinglePage(context);
+                                showAddMovieList();
+                              },
+                              child: Image.asset(
+                                R.img_ic_add_new,
+                                width: 40,
+                                height: 40,
+                              ))
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ]));
+        });
   }
 
   @override
@@ -288,7 +475,8 @@ class _DetailMoviePageState extends State<DetailMoviePage>
                                                           context);
                                                       controller.reverse();
                                                       isShowClose = false;
-                                                      provider.hideTrailerLayout();
+                                                      provider
+                                                          .hideTrailerLayout();
                                                     },
                                                     child: Image.asset(
                                                       R.img_ic_close_video,
@@ -323,19 +511,20 @@ class _DetailMoviePageState extends State<DetailMoviePage>
                   }))),
     );
   }
+
   void _share(BuildContext context) {
-    Navigator.of(context).pop();
     MovieDetailModel movieDetailModel = provider.movieDetailModel;
-    if(movieDetailModel == null) return;
+    if (movieDetailModel == null) return;
     showDialog(
         context: context,
         builder: (ctx) {
           var width = (Adapt.screenW() - Adapt.px(60)).floorToDouble();
           var height = ((width - Adapt.px(40)) / 2).floorToDouble();
           return ShareCard(
-            backgroundImage: ImageUrl.getUrl(movieDetailModel.backdropPath, ImageSize.w300),
+            backgroundImage:
+                ImageUrl.getUrl(movieDetailModel.backdropPath, ImageSize.w300),
             qrValue:
-            'https://www.themoviedb.org/movie/${movieDetailModel.id}?language=${ui.window.locale.languageCode}',
+                'https://www.themoviedb.org/movie/${movieDetailModel.id}?language=${ui.window.locale.languageCode}',
             headerHeight: height,
             header: Column(children: <Widget>[
               SizedBox(
@@ -351,7 +540,7 @@ class _DetailMoviePageState extends State<DetailMoviePage>
                     height: Adapt.px(120),
                     decoration: BoxDecoration(
                         border:
-                        Border.all(color: Colors.white, width: Adapt.px(5)),
+                            Border.all(color: Colors.white, width: Adapt.px(5)),
                         borderRadius: BorderRadius.circular(Adapt.px(60)),
                         image: DecorationImage(
                             fit: BoxFit.cover,
@@ -376,21 +565,24 @@ class _DetailMoviePageState extends State<DetailMoviePage>
               SizedBox(
                 height: Adapt.px(20),
               ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: Adapt.px(20)),
-                width: width - Adapt.px(40),
-                height: height - Adapt.px(170),
-                child: Text(movieDetailModel.overview,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 5,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: Adapt.px(26),
-                        shadows: <Shadow>[
-                          Shadow(
-                              offset: Offset(Adapt.px(1), Adapt.px(1)),
-                              blurRadius: 3)
-                        ])),
+              Flexible(
+                fit: FlexFit.loose,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: Adapt.px(20)),
+                  width: width - Adapt.px(40),
+                  height: height - Adapt.px(160),
+                  child: Text(movieDetailModel.overview,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 5,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: Adapt.px(24),
+                          shadows: <Shadow>[
+                            Shadow(
+                                offset: Offset(Adapt.px(1), Adapt.px(1)),
+                                blurRadius: 3)
+                          ])),
+                ),
               )
             ]),
           );
@@ -480,7 +672,9 @@ class _DetailMoviePageState extends State<DetailMoviePage>
                   provider.favorite();
                 },
                 child: Image.asset(
-                  provider.isFavorite ? R.img_ic_favourite_active : R.img_ic_favourite,
+                  provider.isFavorite
+                      ? R.img_ic_favourite_active
+                      : R.img_ic_favourite,
                   width: 40,
                   height: 40,
                 ),
@@ -488,18 +682,28 @@ class _DetailMoviePageState extends State<DetailMoviePage>
               SizedBox(
                 width: 20,
               ),
-              Image.asset(
-                R.img_ic_add,
-                width: 40,
-                height: 40,
+              GestureDetector(
+                onTap: () {
+                  showMovieList();
+                },
+                child: Image.asset(
+                  R.img_ic_add,
+                  width: 40,
+                  height: 40,
+                ),
               ),
               SizedBox(
                 width: 20,
               ),
-              Image.asset(
-                R.img_ic_share,
-                width: 40,
-                height: 40,
+              GestureDetector(
+                onTap: () {
+                  _share(context);
+                },
+                child: Image.asset(
+                  R.img_ic_share,
+                  width: 40,
+                  height: 40,
+                ),
               ),
             ],
           )
@@ -946,7 +1150,10 @@ class _VideoPlayer extends StatelessWidget {
   Widget build(BuildContext context) {
     Size viewsSize = MediaQuery.of(context).size;
     final _width = viewsSize.width;
-    final _height = _width * 9 / 16;
+    double _height = _width * 9 / 16;
+    if (viewsSize.width > viewsSize.height) {
+      _height = viewsSize.height;
+    }
     return play
         ? GestureDetector(
             onTap: () {
@@ -968,10 +1175,17 @@ class _VideoPlayer extends StatelessWidget {
                   width: _width,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(Adapt.px(25)),
-                    child: Stack(children: [widget, GestureDetector(onTap: () {
-                      print("onTapVideo");
-                    },child: Container(height: double.infinity,
-                      width:  double.infinity,))]),
+                    child: Stack(children: [
+                      widget,
+                      GestureDetector(
+                          onTap: () {
+                            print("onTapVideo");
+                          },
+                          child: Container(
+                            height: double.infinity,
+                            width: double.infinity,
+                          ))
+                    ]),
                   ),
                 );
               },
@@ -979,6 +1193,4 @@ class _VideoPlayer extends StatelessWidget {
           )
         : const SizedBox();
   }
-
-
 }
