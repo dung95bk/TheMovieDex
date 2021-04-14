@@ -37,12 +37,23 @@ class DetailMoviePageProvider extends ChangeNotifier {
   bool isHasImageData = false;
   bool isShowTrailerLayout = false;
   bool isFavorite = false;
+  List<PlayListHive> listPlayList = [];
 
   DetailMoviePageProvider(this.movieId) {
     editingController.addListener(() { isEnableOk = editingController.text.isNotEmpty; notifyListeners();});
+    getListPlayList();
     initData();
     getImage();
     getVideo();
+  }
+
+  void getListPlayList() {
+    listPlayList.clear();
+    var playList = Hive.box<PlayListHive>(BoxName.BOX_PLAYLIST);
+    if(playList.values != null && playList.values.length > 0) {
+      listPlayList.addAll(playList.values.toList().reversed);
+      print("List: ${listPlayList.length}");
+    }
   }
 
   void initData() async {
@@ -98,10 +109,18 @@ class DetailMoviePageProvider extends ChangeNotifier {
     return foundMovie != null;
   }
 
+  bool isAddedToList() {
+    var boxMovie = Hive.box<FavoriteMovieHive>(BoxName.BOX_FAV_MOVIE);
+    var foundMovie = boxMovie.get(movieDetailModel.id);
+    return foundMovie != null;
+  }
+
   bool createPlayList() {
     if(editingController.text.isNotEmpty) {
       var playList = Hive.box<PlayListHive>(BoxName.BOX_PLAYLIST);
-      playList.add(PlayListHive(editingController.text, editingController.text, null));
+      final playListHive = PlayListHive(editingController.text, editingController.text, null);
+      playList.put(editingController.text, playListHive);
+      getListPlayList();
       print("Succes:${playList.values.length}");
       editingController.clear();
       return true;
@@ -182,5 +201,40 @@ class DetailMoviePageProvider extends ChangeNotifier {
     } else {
       return "";
     }
+  }
+
+  bool saveMovie(String id) {
+    if(!isHasImageData) {
+      return false;
+    }
+    print("sada:${id}");
+    var box = Hive.box<PlayListHive>(BoxName.BOX_PLAYLIST);
+    PlayListHive playListHive = box.get(id);
+    print("sada:${id}");
+
+    if(playListHive != null) {
+      var item = MovieItemListHive(movieDetailModel.id, movieDetailModel.originalTitle, movieDetailModel.releaseDate, movieDetailModel.posterPath);
+      print("sada1");
+
+      if(playListHive.listItem != null) {
+        print("sada2");
+
+        bool isDuplicate = false;
+        for(int index = 0; index < playListHive.listItem.length; index++) {
+          if(playListHive.listItem[index].id == movieDetailModel.id) {
+            isDuplicate = true;
+          }
+        }
+        if(!isDuplicate) {
+          playListHive.listItem.add(item);
+        }
+      } else {
+        playListHive.listItem = [];
+        playListHive.listItem.add(item);
+      }
+      playListHive.save();
+      return true;
+    }
+    return false;
   }
 }

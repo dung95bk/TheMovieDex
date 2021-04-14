@@ -9,6 +9,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:rubber/rubber.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:themoviedex/data/model/local/playlist_hive.dart';
 import 'package:themoviedex/data/remote/models/credits_model.dart';
 import 'package:themoviedex/data/remote/models/enums/imagesize.dart';
 import 'package:themoviedex/data/remote/models/image_model.dart';
@@ -114,8 +115,6 @@ class _DetailMoviePageState extends State<DetailMoviePage>
     }
   }
 
-
-
   void showAddMovieList() {
     showModalBottomSheet(
         context: context,
@@ -123,7 +122,7 @@ class _DetailMoviePageState extends State<DetailMoviePage>
         isScrollControlled: true,
         builder: (context) {
           return Container(
-              height:MediaQuery.of(context).viewInsets.bottom + 220 ,
+              height: MediaQuery.of(context).viewInsets.bottom + 220,
               child: Column(mainAxisSize: MainAxisSize.min, children: [
                 Container(
                   width: Adapt.screenW() / 5,
@@ -146,7 +145,6 @@ class _DetailMoviePageState extends State<DetailMoviePage>
                       ),
                     ),
                     child: Column(
-
                       children: [
                         GestureDetector(
                           onTap: () {
@@ -161,37 +159,43 @@ class _DetailMoviePageState extends State<DetailMoviePage>
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
-                        SizedBox(height: 10,),
+                        SizedBox(
+                          height: 10,
+                        ),
                         Container(
                           padding: EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            border: Border.all(color: Color(0xFF666F7A), width: 1)
-                          ),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                              border: Border.all(
+                                  color: Color(0xFF666F7A), width: 1)),
                           child: TextField(
                             controller: provider.editingController,
                             decoration: InputDecoration(
-                              hintText: "Name playlist…",
-                              hintStyle:
-                                  TextStyle(color: Color(0xFF666F7A),decoration: TextDecoration.none, fontSize: 16),
-                              fillColor: Colors.white,
-                              hoverColor: Colors.white,
-                              focusColor: Colors.white,
-                              border: InputBorder.none
-                            ),
+                                hintText: "Name playlist…",
+                                hintStyle: TextStyle(
+                                    color: Color(0xFF666F7A),
+                                    decoration: TextDecoration.none,
+                                    fontSize: 16),
+                                fillColor: Colors.white,
+                                hoverColor: Colors.white,
+                                focusColor: Colors.white,
+                                border: InputBorder.none),
                             style: TextStyle(color: Colors.white),
                             onSubmitted: (newValue) {},
                             autofocus: false,
                           ),
                         ),
-                        SizedBox(height: 10,),
+                        SizedBox(
+                          height: 10,
+                        ),
                         Align(
                           alignment: Alignment.centerRight,
                           child: GestureDetector(
                             onTap: () {
-                              if(provider.editingController.text.isEmpty) {
+                              if (provider.editingController.text.isEmpty) {
                                 showToast("Fill the name");
-                              } else if(!provider.isNameValidated()) {
+                              } else if (!provider.isNameValidated()) {
                                 showToast("Name existed");
                               } else {
                                 if (provider.createPlayList()) {
@@ -201,27 +205,27 @@ class _DetailMoviePageState extends State<DetailMoviePage>
                               }
                             },
                             child: Opacity(
-                             opacity: 1,
-
+                              opacity: 1,
                               child: Container(
-                                padding: EdgeInsets.only(top: 10, bottom: 10, left: 40, right: 40),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                                    color: AppTheme.bg_rank_top_rate
-                                ),
-                                child: Text(
-                                  "OK",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    height: 1
-                                  ),
-                                )
-                              ),
+                                  padding: EdgeInsets.only(
+                                      top: 10, bottom: 10, left: 40, right: 40),
+                                  decoration: BoxDecoration(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(10)),
+                                      color: AppTheme.bg_rank_top_rate),
+                                  child: Text(
+                                    "OK",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        height: 1),
+                                  )),
                             ),
                           ),
                         ),
-                        SizedBox(height: 10,)
+                        SizedBox(
+                          height: 10,
+                        )
                       ],
                     ),
                   ),
@@ -238,11 +242,13 @@ class _DetailMoviePageState extends State<DetailMoviePage>
         timeInSecForIosWeb: 1,
         backgroundColor: Colors.red,
         textColor: Colors.white,
-        fontSize: 16.0
-    );
+        fontSize: 16.0);
   }
 
   void showMovieList() {
+    if (!provider.isHasVideoData) {
+      return;
+    }
     showModalBottomSheet(
         context: context,
         builder: (context) {
@@ -290,14 +296,113 @@ class _DetailMoviePageState extends State<DetailMoviePage>
                                 R.img_ic_add_new,
                                 width: 40,
                                 height: 40,
-                              ))
+                              )),
                         ],
-                      )
+                      ),
+                      Expanded(child: buildListMovie())
                     ],
                   ),
                 ),
               ]));
         });
+  }
+
+  Widget buildListMovie() {
+    return ListView.builder(
+      itemCount: provider.listPlayList.length,
+      itemBuilder: (context, index) {
+        return buildItemListMovie(provider.listPlayList[index]);
+      },
+    );
+  }
+
+  Widget buildItemListMovie(PlayListHive itemData) {
+    print("buildItem");
+    final _cardWidth = Adapt.screenW() - 20 * 2;
+    final _cardHeight = (_cardWidth * 0.2631578947368421).toDouble();
+    int numMovie = 0;
+    if (itemData.listItem != null) {
+      numMovie = itemData.listItem.length;
+    }
+    String avatar = "";
+    if (numMovie > 0) {
+      avatar = itemData.listItem[0].posterPath;
+    }
+    return GestureDetector(
+      onTap: () {
+        if(provider.saveMovie(itemData.id)) {
+          NavigatorUtil.popSinglePage(context);
+          showToast("Success");
+        }
+      },
+      child: Container(
+          margin: EdgeInsets.only(top: 10),
+          padding: EdgeInsets.all(10),
+          width: _cardWidth,
+          height: _cardHeight,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: AppTheme.bottomNavigationBarBackground_light),
+          child: Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: CachedNetworkImage(
+                  imageUrl: ImageUrl.getUrl(avatar, ImageSize.w300),
+                  fit: BoxFit.cover,
+                  height: _cardHeight - 20,
+                  width: _cardWidth / 5,
+                  placeholder: (context, url) => Image.asset(
+                    R.img_image_thumb,
+                    width: _cardHeight,
+                    height: _cardHeight,
+                    fit: BoxFit.cover,
+                  ),
+                  errorWidget: (context, url, error) => Image.asset(
+                    R.img_image_thumb,
+                    width: _cardHeight,
+                    height: _cardHeight,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.symmetric(horizontal: Adapt.px(20)),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Flexible(
+                        fit: FlexFit.loose,
+                        child: Text(
+                          itemData.title,
+                          maxLines: 2,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: Adapt.px(10),
+                      ),
+                      Flexible(
+                        fit: FlexFit.loose,
+                        child: Text(
+                          "${numMovie} movies",
+                          maxLines: 2,
+                          style: TextStyle(color: Color(0xffc9cbcd)),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          )),
+    );
   }
 
   @override
@@ -513,6 +618,7 @@ class _DetailMoviePageState extends State<DetailMoviePage>
   }
 
   void _share(BuildContext context) {
+    if(!provider.isHasImageData) return;
     MovieDetailModel movieDetailModel = provider.movieDetailModel;
     if (movieDetailModel == null) return;
     showDialog(

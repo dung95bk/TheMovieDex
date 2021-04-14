@@ -67,7 +67,12 @@ class _MainPageState extends State<MainPage> {
                 backgroundColor: AppTheme.bottomNavigationBarBackground_light,
                 body: PageView(
                     physics: NeverScrollableScrollPhysics(),
-                    children: pages.map(_buildPage).toList(),
+                    children: [
+                      _buildPage(pages[0]),
+                      _buildPage(pages[1]),
+                      pages[2],
+                      _buildPage(pages[3]),
+                    ],
                     controller: pageController,
                     onPageChanged: (int i) => {}),
                 bottomNavigationBar: CustomBottomNavigationBar(

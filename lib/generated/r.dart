@@ -43,6 +43,7 @@ class R {
 	static const String img_ic_time = "assets/img/ic_time.png";
 	static const String img_ic_topone = "assets/img/ic_topone.png";
 	static const String img_ic_toprate_movie = "assets/img/ic_toprate_movie.png";
+	static const String img_ic_trash = "assets/img/ic_trash.png";
 	static const String img_ic_tv_airing = "assets/img/ic_tv_airing.png";
 	static const String img_ic_tv_ontv = "assets/img/ic_tv_ontv.png";
 	static const String img_ic_tv_popular = "assets/img/ic_tv_popular.png";
