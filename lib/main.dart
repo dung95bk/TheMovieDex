@@ -1,29 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:themoviedex/data/config/LocalConfig.dart';
 import 'package:themoviedex/data/config/ServerConfig.dart';
 import 'package:themoviedex/data/model/local/favorite_movie_hive.dart';
-import 'package:themoviedex/data/model/local/image_model_hive.dart';
-import 'package:themoviedex/data/model/local/movie_item_list_hive.dart';
 import 'package:themoviedex/data/model/local/movie_item_list_hive.dart';
 import 'package:themoviedex/data/model/local/playlist_hive.dart';
 import 'package:themoviedex/data/remote/tmdb_api.dart';
-import 'package:themoviedex/presentation/custom_widgets/test_page_filter.dart';
 import 'package:themoviedex/presentation/route/route_handler.dart';
-import 'package:themoviedex/presentation/screen/abilities/abilities_page_provider.dart';
-import 'package:themoviedex/presentation/screen/category/category_provider.dart';
-import 'package:themoviedex/presentation/screen/colors/colors_page_provider.dart';
-import 'package:themoviedex/presentation/screen/detail_task/detail_task_provider.dart';
-import 'package:themoviedex/presentation/screen/groups/groups_provider.dart';
-import 'package:themoviedex/presentation/screen/guide_page/guide_provider.dart';
-import 'package:themoviedex/presentation/screen/home/home_provider.dart';
-import 'package:themoviedex/presentation/screen/listwallpaper/list_wallpaper_provider.dart';
-import 'package:themoviedex/presentation/screen/location/location_page_provider.dart';
-import 'package:themoviedex/presentation/screen/map/map_page_provider.dart';
-
-import 'package:themoviedex/presentation/screen/tasks/task_page_provider.dart';
-import 'package:themoviedex/presentation/screen/wallpaper_page/wallpaper_provider.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -35,42 +17,24 @@ import 'package:themoviedex/presentation/screen2/main/components/mymovie/my_movi
 import 'package:themoviedex/presentation/screen2/main/components/search/search_page_provider.dart';
 import 'package:themoviedex/presentation/screen2/main/main_page_provider.dart';
 import 'package:themoviedex/presentation/screen2/splash/splash_page.dart';
-import 'package:themoviedex/presentation/screen2/splash/splash_provider.dart';
 
 import 'data/helper/box_name.dart';
 
 Future<void> main()  async {
-  Hive.registerAdapter(ImageModeHiveAdapter());
   Hive.registerAdapter(FavoriteMovieHiveAdapter());
   Hive.registerAdapter(PlayListHiveAdapter());
   Hive.registerAdapter(MovieItemListHiveAdapter());
 
   await Hive.initFlutter();
-  await Hive.openBox<ImageModeHive>(BoxName.BOX_IMAGE);
   await Hive.openBox<FavoriteMovieHive>(BoxName.BOX_FAV_MOVIE);
   await Hive.openBox<PlayListHive>(BoxName.BOX_PLAYLIST);
   await Hive.openBox<MovieItemListHive>(BoxName.BOX_ITEM_PLAYLIST);
-  await Hive.openBox<String>(BoxName.BOX_DOWNLOADED_IMAGE_PATH);
   await Hive.openBox<String>(BoxName.BOX_SUGGEST_SEARCH);
 
 
 
   runApp(MultiProvider(
     providers: [
-      ChangeNotifierProvider(create: (_) => HomeProvider(),),
-      ChangeNotifierProvider(create: (_) => WallpaperProvider(),),
-      ChangeNotifierProvider(create: (_) => GuideProvider(),),
-      ChangeNotifierProvider(create: (_) => GroupsProvider(),),
-      ChangeNotifierProvider(create: (_) => ColorsPageProvider(),),
-      ChangeNotifierProvider(create: (_) => AbilitiesPageProvider(),),
-      ChangeNotifierProvider(create: (_) => CategoryProvider(),),
-      ChangeNotifierProvider(create: (_) => ListWallpaperProvider(),),
-      ChangeNotifierProvider(create: (_) => LocationPageProvider(),),
-      ChangeNotifierProvider(create: (_) => MapPageProvider(),),
-      ChangeNotifierProvider(create: (_) => TaskPageProvider(),),
-      ChangeNotifierProvider(create: (_) => SplashProvider(),),
-      ChangeNotifierProvider(create: (_) => GuideProvider(),),
-
       //New
       ChangeNotifierProvider(create: (_) => MainPageProvider(),),
       ChangeNotifierProvider(create: (_) => CelebPageProvider(),),
@@ -79,8 +43,6 @@ Future<void> main()  async {
       ChangeNotifierProvider(create: (_) => SearchPageProvider(),),
       ChangeNotifierProvider(create: (_) => TvShowPageProvider(),),
       ChangeNotifierProvider(create: (_) => MoviesPageProvider(),),
-
-
     ],
     child: MyApp(),
   ));}

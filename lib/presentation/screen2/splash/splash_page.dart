@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:themoviedex/presentation/screen/home/home_page.dart';
 import 'package:themoviedex/presentation/screen2/main/main_page.dart';
 import 'package:themoviedex/presentation/screen2/splash/splash_provider.dart';
 import 'package:themoviedex/presentation/util/app_theme.dart';
@@ -20,9 +19,11 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
+  SplashProvider provider;
   @override
   void initState() {
     super.initState();
+    provider = SplashProvider();
     Timer(Duration(seconds: 3), () {
       _goFirstPage(context);
     });
@@ -39,12 +40,18 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(
-      builder: (context, SplashProvider provider, child) {
-        return Container(
-          color: AppTheme.nearlyBlack,
+    return ChangeNotifierProvider.value(
+      value: SplashProvider(),
+      builder: (context, child) {
+        return Consumer(
+          builder: (context, SplashProvider provider, child) {
+            return Container(
+              color: AppTheme.nearlyBlack,
+            );
+          },
         );
       },
+
     );
   }
 }

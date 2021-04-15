@@ -1,9 +1,7 @@
-import 'package:chewie/chewie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
 import 'package:themoviedex/data/helper/box_name.dart';
 import 'package:themoviedex/data/model/local/favorite_movie_hive.dart';
-import 'package:themoviedex/data/model/local/image_model_hive.dart';
 import 'package:themoviedex/data/model/local/movie_item_list_hive.dart';
 import 'package:themoviedex/data/model/local/playlist_hive.dart';
 import 'package:themoviedex/data/remote/models/enums/imagesize.dart';

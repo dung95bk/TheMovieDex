@@ -2,13 +2,10 @@ import 'dart:convert' show json;
 import 'dart:ui' as ui;
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:themoviedex/data/config/LocalConfig.dart';
 import 'package:themoviedex/data/config/ServerConfig.dart';
 import 'package:themoviedex/data/remote/models/enums/media_type.dart';
 import 'package:themoviedex/data/remote/models/enums/time_window.dart';
 import 'package:themoviedex/data/remote/models/external_id_models.dart';
-import 'package:themoviedex/data/remote/models/external_ids_model.dart';
-import 'package:themoviedex/presentation/screen2/main/components/search/multi_type_model.dart';
 
 import 'models/models.dart';
 import 'request.dart';

@@ -2,17 +2,11 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:themoviedex/data/config/ServerConfig.dart';
-import 'package:themoviedex/data/helper/api_name.dart';
 import 'package:themoviedex/data/remote/models/base_api_model/user_list.dart';
 import 'package:themoviedex/data/remote/models/enums/media_type.dart';
 import 'package:themoviedex/data/remote/models/response_model.dart';
 import 'package:themoviedex/data/remote/request.dart';
-import 'package:themoviedex/data/remote/request/get_category_request.dart';
-import 'package:themoviedex/data/remote/request/get_detail_category_request.dart';
-import 'package:themoviedex/data/remote/request/get_detail_task_request.dart';
-import 'package:themoviedex/data/remote/request/get_guide_request.dart';
-import 'package:themoviedex/data/remote/request/get_list_image_request.dart';
-import 'package:themoviedex/data/remote/request/get_token_request.dart';
+
 
 import 'models/models.dart';
 
@@ -455,74 +449,5 @@ class Http {
     };
     final r = await _http.request<String>(_url, method: "POST", data: _data);
     return r;
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  /**
-   * Old data
-   *
-   */
-  Future<Response> getToken(GetTokenRequest getTokenRequest) async {
-    return _dio.post("/${ApiName.GET_TOKEN}",
-        data: jsonEncode(getTokenRequest.toJson()));
-  }
-
-  Future<Response> getListImage(GetListImageRequest getListImageRequest) async {
-    return _dio.post("/${ApiName.GET_LIST_IMAGE_HOT}",
-        data: jsonEncode(getListImageRequest.toJson()));
-  }
-
-  Future<Response> getListCategory(
-      GetcategoryRequest getcategoryRequest) async {
-    return _dio.post("/${ApiName.GET_CATEGORIES}",
-        data: jsonEncode(getcategoryRequest.toJson()));
-  }
-
-  Future<Response> getCategoryDetail(
-      GetCategoryDetailRequest getCategoryDetailRequest) async {
-    return _dio.post("/${ApiName.GET_CATEGORIES_DETAIL}",
-        data: jsonEncode(getCategoryDetailRequest.toJson()));
-  }
-
-  Future<Response> getGuide(
-      GetGuideRequest getGuideRequest) async {
-    return _dio.post("/${ApiName.GET_GUIDE}",
-        data: jsonEncode(getGuideRequest.toJson()));
-  }
-
-  Future<Response> getDetailTask(
-      GetDetailTaskRequest getDetailTaskRequest) async {
-    return _dio.post("/${ApiName.GET_DETAIL_TASK}",
-        data: jsonEncode(getDetailTaskRequest.toJson()));
-  }
-
-  Future<Response> executeRequest(String request) async {
-    return _dio.post("/", data: request);
   }
 }
