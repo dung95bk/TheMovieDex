@@ -8,12 +8,15 @@ import 'package:themoviedex/data/model/local/favorite_movie_hive.dart';
 import 'package:themoviedex/data/model/local/playlist_hive.dart';
 import 'package:themoviedex/data/remote/models/enums/imagesize.dart';
 import 'package:themoviedex/generated/r.dart';
+import 'package:themoviedex/presentation/screen2/detail_movies/detail_movies_page.dart';
 import 'package:themoviedex/presentation/screen2/main/components/home/movies/custom_pageview_widget.dart';
 import 'package:themoviedex/presentation/screen2/main/components/home/tvshow/item_tv_show/RPSCustomPainter.dart';
 import 'package:themoviedex/presentation/screen2/main/components/mymovie/my_movie_provider.dart';
+import 'package:themoviedex/presentation/screen2/main/components/mymovie/playlist/playlist_page.dart';
 import 'package:themoviedex/presentation/util/adapt.dart';
 import 'package:themoviedex/presentation/util/app_theme.dart';
 import 'package:themoviedex/presentation/util/imageurl.dart';
+import 'package:themoviedex/presentation/util/navigator_util.dart';
 
 class MyMoviePage extends StatefulWidget {
   MyMoviePage({Key key}) : super(key: key);
@@ -48,7 +51,6 @@ class _MyMoviePageState extends State<MyMoviePage> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       provider.initData();
     });
-
   }
 
   @override
@@ -71,37 +73,45 @@ class _MyMoviePageState extends State<MyMoviePage> {
                   style: TextStyle(
                       fontSize: 28,
                       color: Colors.white,
-                      fontWeight: FontWeight.bold
-                  ),
+                      fontWeight: FontWeight.bold),
                 ),
               ),
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
               buildListMovieList(),
-              SizedBox(height: 20,),
-
+              SizedBox(
+                height: 20,
+              ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(width: 20,),
-
-                  Image.asset(R.img_ic_my_fav, width: 25,height: 25,),
-                  SizedBox(width: 10,),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Image.asset(
+                    R.img_ic_my_fav,
+                    width: 25,
+                    height: 25,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
                   Container(
                     child: Text(
                       "Favourite",
                       style: TextStyle(
                           fontSize: 24,
                           color: Colors.white,
-                          fontWeight: FontWeight.bold
-                      ),
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
               buildFavoriteList()
-
-
             ],
           );
         },
@@ -110,27 +120,25 @@ class _MyMoviePageState extends State<MyMoviePage> {
   }
 
   Widget buildListMovieList() {
-    final _cardWidth = Adapt.screenW() * 4/ 5- 10;
+    final _cardWidth = Adapt.screenW() * 4 / 5 - 10;
     final _cardHeight = (_cardWidth * 0.4).toDouble();
     return Container(
       height: _cardHeight,
       margin: EdgeInsets.only(left: 20),
       child: CustomPageView.builder(
-      controller: pageController,
+        controller: pageController,
         viewportDirection: false,
-        itemCount:
-        provider.listPlayList.length,
+        itemCount: provider.listPlayList.length,
         itemBuilder: (context, index) {
-          return  buildItemListMovie(provider.listPlayList[index]);
+          return buildItemListMovie(provider.listPlayList[index]);
         },
       ),
     );
-
   }
 
   Widget buildItemListMovie(PlayListHive itemData) {
     print("buildItem");
-    final _cardWidth = Adapt.screenW() * 4/ 5- 10;
+    final _cardWidth = Adapt.screenW() * 4 / 5 - 10;
     final _cardHeight = (_cardWidth * 0.4).toDouble();
     int numMovie = 0;
     if (itemData.listItem != null) {
@@ -142,7 +150,7 @@ class _MyMoviePageState extends State<MyMoviePage> {
     }
     return GestureDetector(
       onTap: () {
-
+        NavigatorUtil.pushPage(context, PlayListPage(playListId: itemData.id,));
       },
       child: Container(
           margin: EdgeInsets.only(right: 20),
@@ -160,21 +168,19 @@ class _MyMoviePageState extends State<MyMoviePage> {
                   imageUrl: ImageUrl.getUrl(avatar, ImageSize.w300),
                   fit: BoxFit.cover,
                   height: _cardHeight - 20,
-                  width: _cardHeight * 2/3,
-                  placeholder: (context, url) =>
-                      Image.asset(
-                        R.img_image_thumb,
-                        width: _cardHeight,
-                        height: _cardHeight,
-                        fit: BoxFit.cover,
-                      ),
-                  errorWidget: (context, url, error) =>
-                      Image.asset(
-                        R.img_image_thumb,
-                        width: _cardHeight,
-                        height: _cardHeight,
-                        fit: BoxFit.cover,
-                      ),
+                  width: _cardHeight * 2 / 3,
+                  placeholder: (context, url) => Image.asset(
+                    R.img_image_thumb,
+                    width: _cardHeight,
+                    height: _cardHeight,
+                    fit: BoxFit.cover,
+                  ),
+                  errorWidget: (context, url, error) => Image.asset(
+                    R.img_image_thumb,
+                    width: _cardHeight,
+                    height: _cardHeight,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
               Expanded(
@@ -216,119 +222,126 @@ class _MyMoviePageState extends State<MyMoviePage> {
     );
   }
 
-
   Widget buildFavoriteList() {
     return Expanded(
       child: Container(
-        margin: EdgeInsets.only(left: 20, right:  20),
-        child: ListView.builder(itemCount : provider.listFavorite.length, itemBuilder: (context, index) {
-          return buildItemFavorite(provider.listFavorite[index]);
-        },),
+        margin: EdgeInsets.only(left: 20, right: 20),
+        child: ListView.builder(
+          itemCount: provider.listFavorite.length,
+          itemBuilder: (context, index) {
+            return buildItemFavorite(provider.listFavorite[index], index);
+          },
+        ),
       ),
     );
   }
 
-  Widget buildItemFavorite(FavoriteMovieHive listFavorite) {
-    return Container(
-      margin: EdgeInsets.only(top: 20),
-      child:ClipRRect(
-      borderRadius: BorderRadius.only(
-    topRight: const Radius.circular(20),
-    bottomRight: const Radius.circular(20),
-    bottomLeft: const Radius.circular(30)),
-        child:       Stack(
-          children: [
-            CustomPaint(
-              size: Size(card_fav_width, card_fav_height),
-              painter: RPSCustomPainter(),
-            ),
-            Positioned(
-              child: Container(
-                width: _partLeftWidth,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(30),
-                      ),
-                      child: CachedNetworkImage(
-                        imageUrl: ImageUrl.getUrl(
-                            listFavorite.posterPath, ImageSize.w300),
-                        fit: BoxFit.cover,
-                        height: card_fav_height,
-                        width: _imageWidth,
-                        placeholder: (context, url) => Image.asset(
-                          R.img_image_thumb,
-                          width: card_fav_height,
-                          height: card_fav_height,
-                          fit: BoxFit.cover,
-                        ),
-                        errorWidget: (context, url, error) => Image.asset(
-                          R.img_image_thumb,
-                          width: card_fav_height,
-                          height: card_fav_height,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        margin: EdgeInsets.symmetric(
-                            horizontal: Adapt.px(20)),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceAround,
-                          children: [
-                            Flexible(
-                              fit: FlexFit.loose,
-                              child: Text(
-                                listFavorite.title,
-                                maxLines: 2,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: Adapt.px(10),
-                            ),
-                            Flexible(
-                              fit: FlexFit.loose,
-                              child: Text(
-                                listFavorite.date,
-                                maxLines: 2,
-                                style:
-                                TextStyle(color: Color(0xffc9cbcd)),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    )
-                  ],
+  Widget buildItemFavorite(FavoriteMovieHive itemData, int index) {
+    return GestureDetector(
+      onTap: () {
+        NavigatorUtil.pushPage(context, DetailMoviePage(movieId: itemData.id, movieType: itemData.isTvShow ? "tv" : "movie",));
+      },
+      child: Container(
+          margin: EdgeInsets.only(top: 20),
+          child: ClipRRect(
+            borderRadius: BorderRadius.only(
+                topRight: const Radius.circular(20),
+                bottomRight: const Radius.circular(20),
+                bottomLeft: const Radius.circular(30)),
+            child: Stack(
+              children: [
+                CustomPaint(
+                  size: Size(card_fav_width, card_fav_height),
+                  painter: RPSCustomPainter(),
                 ),
-              ),
-            ),
-            Positioned(
-                left: postitionPartRight + _partRightWidth /2 - 20,
-                top: card_fav_height / 2 -20,
-                child: GestureDetector(
-                  onTap: () {
-                  },
+                Positioned(
                   child: Container(
-                    width: 40,
-                    height: 40,
-                    child: Image.asset(R.img_ic_trash, width: 20, height: 20,)
+                    width: _partLeftWidth,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(30),
+                          ),
+                          child: CachedNetworkImage(
+                            imageUrl: ImageUrl.getUrl(
+                                itemData.posterPath, ImageSize.w300),
+                            fit: BoxFit.cover,
+                            height: card_fav_height,
+                            width: _imageWidth,
+                            placeholder: (context, url) => Image.asset(
+                              R.img_image_thumb,
+                              width: card_fav_height,
+                              height: card_fav_height,
+                              fit: BoxFit.cover,
+                            ),
+                            errorWidget: (context, url, error) => Image.asset(
+                              R.img_image_thumb,
+                              width: card_fav_height,
+                              height: card_fav_height,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            margin:
+                                EdgeInsets.symmetric(horizontal: Adapt.px(20)),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Flexible(
+                                  fit: FlexFit.loose,
+                                  child: Text(
+                                    itemData.title,
+                                    maxLines: 2,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: Adapt.px(10),
+                                ),
+                                Flexible(
+                                  fit: FlexFit.loose,
+                                  child: Text(
+                                    itemData.date,
+                                    maxLines: 2,
+                                    style: TextStyle(color: Color(0xffc9cbcd)),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                ))
-          ],
-        ),
-
-      )
+                ),
+                Positioned(
+                    left: postitionPartRight + _partRightWidth / 2 - 20,
+                    top: card_fav_height / 2 - 20,
+                    child: GestureDetector(
+                      onTap: () {
+                        provider.deleteFavorite(itemData.id, index);
+                      },
+                      child: Container(
+                          width: 40,
+                          height: 40,
+                          child: Image.asset(
+                            R.img_ic_trash,
+                            width: 20,
+                            height: 20,
+                          )),
+                    ))
+              ],
+            ),
+          )),
     );
   }
 }

@@ -1,40 +1,34 @@
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import 'package:rubber/rubber.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:themoviedex/data/model/local/playlist_hive.dart';
 import 'package:themoviedex/data/remote/models/credits_model.dart';
 import 'package:themoviedex/data/remote/models/enums/imagesize.dart';
 import 'package:themoviedex/data/remote/models/image_model.dart';
 import 'package:themoviedex/data/remote/models/models.dart';
-import 'package:themoviedex/data/remote/models/video_list.dart';
 import 'package:themoviedex/generated/r.dart';
+import 'package:themoviedex/presentation/screen2/detail_celeb/detail_celeb_page.dart';
+import 'package:themoviedex/presentation/screen2/detail_movies/adapter_movie_model.dart';
 import 'package:themoviedex/presentation/screen2/detail_movies/detail_movies_page_provider.dart';
-import 'package:themoviedex/presentation/screen2/main/components/home/movies/slider_custom_widget.dart';
-import 'package:themoviedex/presentation/screen2/widgets/backdrop.dart';
-import 'package:themoviedex/presentation/screen2/widgets/bottomsheet/flexible_bottom_sheet_route.dart';
-import 'package:themoviedex/presentation/screen2/widgets/expandable_text.dart';
 import 'package:themoviedex/presentation/screen2/widgets/share_card.dart';
 import 'package:themoviedex/presentation/util/adapt.dart';
 import 'package:themoviedex/presentation/util/app_theme.dart';
 import 'package:themoviedex/presentation/util/imageurl.dart';
 import 'package:themoviedex/presentation/util/navigator_util.dart';
-import 'package:themoviedex/presentation/util/screen_util.dart';
-import 'package:video_player/video_player.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'dart:ui' as ui;
 
 class DetailMoviePage extends StatefulWidget {
   int movieId;
+  String movieType;
 
-  DetailMoviePage({Key key, @required this.movieId}) : super(key: key);
+  DetailMoviePage({Key key, @required this.movieId, @required this.movieType})
+      : super(key: key);
 
   @override
   _DetailMoviePageState createState() {
@@ -73,7 +67,7 @@ class _DetailMoviePageState extends State<DetailMoviePage>
   @override
   void initState() {
     super.initState();
-    provider = DetailMoviePageProvider(widget.movieId);
+    provider = DetailMoviePageProvider(widget.movieId, widget.movieType);
     widthItemCast = (Adapt.screenW() - Adapt.px(20)) / 4;
     heightImageCast = widthItemCast * 16 / 9;
 
@@ -246,7 +240,7 @@ class _DetailMoviePageState extends State<DetailMoviePage>
   }
 
   void showMovieList() {
-    if (!provider.isHasVideoData) {
+    if (!provider.isHasImageData) {
       return;
     }
     showModalBottomSheet(
@@ -330,7 +324,7 @@ class _DetailMoviePageState extends State<DetailMoviePage>
     }
     return GestureDetector(
       onTap: () {
-        if(provider.saveMovie(itemData.id)) {
+        if (provider.saveMovie(itemData.id)) {
           NavigatorUtil.popSinglePage(context);
           showToast("Success");
         }
@@ -427,7 +421,6 @@ class _DetailMoviePageState extends State<DetailMoviePage>
                         DraggableScrollableNotification>(
                       onNotification: (notification) {
                         _pageNotifier.value = notification.extent;
-                        print("Extent: ${notification.extent}");
                         setState(() {});
                       },
                       child: Stack(
@@ -618,9 +611,9 @@ class _DetailMoviePageState extends State<DetailMoviePage>
   }
 
   void _share(BuildContext context) {
-    if(!provider.isHasImageData) return;
-    MovieDetailModel movieDetailModel = provider.movieDetailModel;
-    if (movieDetailModel == null) return;
+    if (!provider.isHasImageData) return;
+    AdapterMovieModel model = provider.adapterMovieModel;
+    if (model == null) return;
     showDialog(
         context: context,
         builder: (ctx) {
@@ -628,9 +621,9 @@ class _DetailMoviePageState extends State<DetailMoviePage>
           var height = ((width - Adapt.px(40)) / 2).floorToDouble();
           return ShareCard(
             backgroundImage:
-                ImageUrl.getUrl(movieDetailModel.backdropPath, ImageSize.w300),
+                ImageUrl.getUrl(model.backdropPath, ImageSize.w300),
             qrValue:
-                'https://www.themoviedb.org/movie/${movieDetailModel.id}?language=${ui.window.locale.languageCode}',
+                'https://www.themoviedb.org/movie/${model.id}?language=${ui.window.locale.languageCode}',
             headerHeight: height,
             header: Column(children: <Widget>[
               SizedBox(
@@ -651,14 +644,14 @@ class _DetailMoviePageState extends State<DetailMoviePage>
                         image: DecorationImage(
                             fit: BoxFit.cover,
                             image: CachedNetworkImageProvider(ImageUrl.getUrl(
-                                movieDetailModel.posterPath, ImageSize.w300)))),
+                                model.posterPath, ImageSize.w300)))),
                   ),
                   SizedBox(
                     width: Adapt.px(20),
                   ),
                   Container(
                     width: width - Adapt.px(310),
-                    child: Text(movieDetailModel.originalTitle,
+                    child: Text(model.title,
                         maxLines: 2,
                         style: TextStyle(
                           color: Colors.white,
@@ -677,7 +670,7 @@ class _DetailMoviePageState extends State<DetailMoviePage>
                   padding: EdgeInsets.symmetric(horizontal: Adapt.px(20)),
                   width: width - Adapt.px(40),
                   height: height - Adapt.px(160),
-                  child: Text(movieDetailModel.overview,
+                  child: Text(model.overview,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 5,
                       style: TextStyle(
@@ -712,7 +705,7 @@ class _DetailMoviePageState extends State<DetailMoviePage>
             child: Container(
               margin: EdgeInsets.symmetric(horizontal: 10),
               child: Text(
-                provider.movieDetailModel.originalTitle ?? "",
+                provider.adapterMovieModel.title ?? "",
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 20,
@@ -737,7 +730,7 @@ class _DetailMoviePageState extends State<DetailMoviePage>
                 width: 10,
               ),
               Text(
-                "${_covertDuration(provider.movieDetailModel?.runtime)}",
+                "${provider.adapterMovieModel.duration ?? ""}",
                 style: TextStyle(color: Colors.white, fontSize: 15),
               ),
               SizedBox(
@@ -756,7 +749,7 @@ class _DetailMoviePageState extends State<DetailMoviePage>
               ),
               Flexible(
                 child: Text(
-                  getGenre(provider.movieDetailModel.genres),
+                  getGenre(provider.adapterMovieModel.genres),
                   style: TextStyle(color: Colors.white, fontSize: 15),
                 ),
               ),
@@ -818,20 +811,6 @@ class _DetailMoviePageState extends State<DetailMoviePage>
     );
   }
 
-  String _covertDuration(int d) {
-    if (d == null) {
-      return "";
-    }
-    String result = '';
-    Duration duration = Duration(minutes: d);
-    int h = duration.inHours;
-    int countedMin = h * 60;
-    int m = duration.inMinutes - countedMin;
-    result += h > 0 ? '$h h ' : '';
-    result += '$m min';
-    return result;
-  }
-
   String getGenre(List<Genre> list) {
     if (list == null) {
       return "";
@@ -870,7 +849,7 @@ class _DetailMoviePageState extends State<DetailMoviePage>
             child: Opacity(
               opacity: opacity,
               child: Text(
-                provider.movieDetailModel.originalTitle ?? "",
+                provider.adapterMovieModel.title ?? "",
                 textAlign: TextAlign.start,
                 style: TextStyle(
                     color: Colors.white,
@@ -1002,7 +981,7 @@ class _DetailMoviePageState extends State<DetailMoviePage>
         borderRadius: BorderRadius.all(Radius.circular(40)),
         child: CachedNetworkImage(
           imageUrl: ImageUrl.getUrl(
-              provider.movieDetailModel.posterPath, ImageSize.w300),
+              provider.adapterMovieModel.posterPath, ImageSize.w300),
           fit: BoxFit.cover,
           width: width,
           height: height,
@@ -1024,9 +1003,9 @@ class _DetailMoviePageState extends State<DetailMoviePage>
   }
 
   Widget buildCast() {
-    if (provider.movieDetailModel.credits != null &&
-        provider.movieDetailModel.credits.cast != null) {
-      List<CastData> listCast = provider.movieDetailModel.credits.cast;
+    if (provider.adapterMovieModel.credits != null &&
+        provider.adapterMovieModel.credits.cast != null) {
+      List<CastData> listCast = provider.adapterMovieModel.credits.cast;
       return Container(
         width: Adapt.screenW(),
         height: heightItemCast,
@@ -1035,7 +1014,7 @@ class _DetailMoviePageState extends State<DetailMoviePage>
           itemCount: listCast.length,
           itemBuilder: (context, index) {
             var itemCast = listCast[index];
-            return buildCastItem(itemCast);
+            return buildCastItem(itemCast, index);
           },
         ),
       );
@@ -1101,53 +1080,69 @@ class _DetailMoviePageState extends State<DetailMoviePage>
         ));
   }
 
-  Widget buildCastItem(CastData itemData) {
-    return Container(
-      margin: EdgeInsets.only(left: 20, right: 0),
-      width: widthItemCast,
-      height: heightItemCast,
-      child: IntrinsicWidth(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-              child: CachedNetworkImage(
-                imageUrl: ImageUrl.getUrl(itemData.profilePath, ImageSize.w300),
-                fit: BoxFit.cover,
+  Widget buildCastItem(CastData itemData, int index) {
+    return Hero(
+        tag: index,
+        child: Material(
+            color: AppTheme.bottomNavigationBarBackground_light,
+            child: InkWell(
+              onTap: () {
+                NavigatorUtil.pushPage(
+                    context,
+                    DetailCelebPage(
+                        celebId: itemData.id,
+                        urlAvatar: itemData.profilePath,
+                        animationTag: index));
+              },
+              child: Container(
+                margin: EdgeInsets.only(left: 20, right: 0),
                 width: widthItemCast,
-                height: heightImageCast,
-                placeholder: (context, url) => Image.asset(
-                  R.img_image_thumb,
-                  width: widthItemCast,
-                  height: heightImageCast,
-                  fit: BoxFit.cover,
-                ),
-                errorWidget: (context, url, error) => Image.asset(
-                  R.img_image_thumb,
-                  width: widthItemCast,
-                  height: heightImageCast,
-                  fit: BoxFit.cover,
+                height: heightItemCast,
+                child: IntrinsicWidth(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        child: CachedNetworkImage(
+                          imageUrl: ImageUrl.getUrl(
+                              itemData.profilePath, ImageSize.w300),
+                          fit: BoxFit.cover,
+                          width: widthItemCast,
+                          height: heightImageCast,
+                          placeholder: (context, url) => Image.asset(
+                            R.img_image_thumb,
+                            width: widthItemCast,
+                            height: heightImageCast,
+                            fit: BoxFit.cover,
+                          ),
+                          errorWidget: (context, url, error) => Image.asset(
+                            R.img_image_thumb,
+                            width: widthItemCast,
+                            height: heightImageCast,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        itemData.name ?? "",
+                        maxLines: 2,
+                        style: TextStyle(
+                            height: 1, fontSize: 16, color: Colors.white),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              itemData.name ?? "",
-              maxLines: 2,
-              style: TextStyle(height: 1, fontSize: 16, color: Colors.white),
-            ),
-          ],
-        ),
-      ),
-    );
+            )));
   }
 
   Widget buildOverview() {
     return Text(
-      provider.movieDetailModel.overview ?? "Empty",
+      provider.adapterMovieModel.overview ?? "Empty",
       style: TextStyle(
           color: Colors.white,
           fontSize: 16,

@@ -21,13 +21,14 @@ class FavoriteMovieHiveAdapter extends TypeAdapter<FavoriteMovieHive> {
       fields[11] as String,
       fields[12] as String,
       fields[13] as String,
+      fields[14] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, FavoriteMovieHive obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(10)
       ..write(obj.id)
       ..writeByte(11)
@@ -35,7 +36,9 @@ class FavoriteMovieHiveAdapter extends TypeAdapter<FavoriteMovieHive> {
       ..writeByte(12)
       ..write(obj.date)
       ..writeByte(13)
-      ..write(obj.posterPath);
+      ..write(obj.posterPath)
+      ..writeByte(14)
+      ..write(obj.isTvShow);
   }
 
   @override

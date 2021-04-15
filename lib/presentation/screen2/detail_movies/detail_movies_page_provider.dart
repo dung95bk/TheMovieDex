@@ -13,6 +13,7 @@ import 'package:themoviedex/data/remote/models/movie_detail.dart';
 import 'package:themoviedex/data/remote/models/response_model.dart';
 import 'package:themoviedex/data/remote/models/video_list.dart';
 import 'package:themoviedex/data/remote/tmdb_api.dart';
+import 'package:themoviedex/presentation/screen2/detail_movies/adapter_movie_model.dart';
 import 'package:themoviedex/presentation/util/imageurl.dart';
 import 'package:themoviedex/presentation/util/videourl.dart';
 import 'package:video_player/video_player.dart';
@@ -21,10 +22,13 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 class DetailMoviePageProvider extends ChangeNotifier {
   int currentPage = 0;
   MovieDetailModel movieDetailModel = MovieDetailModel.empty();
+  TVDetailModel tvDetailModel = TVDetailModel.empty();
+  AdapterMovieModel adapterMovieModel = AdapterMovieModel.empty();
   ImageModel imageModel = ImageModel.empty();
   List<VideoResult> listVideo = [];
   bool isLoading = false;
   int movieId;
+  String movieType;
   TextEditingController editingController = TextEditingController();
   bool isEnableOk = false;
   // VideoPlayerController videoPlayerController;
@@ -39,7 +43,8 @@ class DetailMoviePageProvider extends ChangeNotifier {
   bool isFavorite = false;
   List<PlayListHive> listPlayList = [];
 
-  DetailMoviePageProvider(this.movieId) {
+  DetailMoviePageProvider(this.movieId, this.movieType) {
+    print("movieType : ${movieType}");
     editingController.addListener(() { isEnableOk = editingController.text.isNotEmpty; notifyListeners();});
     getListPlayList();
     initData();
@@ -59,15 +64,30 @@ class DetailMoviePageProvider extends ChangeNotifier {
   void initData() async {
     final _tmdb = TMDBApi.instance;
     print('DetailMovie id: ${movieId}');
-    final response = await _tmdb.getMovieDetail(movieId,
-        appendtoresponse:
-            'keywords,recommendations,credits,external_ids,release_dates,images,movies');
-    if (response.success) {
-      movieDetailModel = response.result;
+    var response;
+    if(movieType == "movie") {
+      response = await _tmdb.getMovieDetail(movieId,
+          appendtoresponse:
+          'keywords,recommendations,credits,external_ids,release_dates,images,movies');
+      if (response.success) {
+        movieDetailModel = response.result;
+        adapterMovieModel = AdapterMovieModel.fromMovieModel(movieDetailModel);
+      }
+    } else {
+      response = await _tmdb.getTVDetail(movieId,
+          appendtoresponse:
+          'keywords,recommendations,credits,external_ids,release_dates,images,movies');
+      if (response.success) {
+        tvDetailModel = response.result;
+        adapterMovieModel = AdapterMovieModel.fromTvShowModel(tvDetailModel);
+      }
+    }
+    if(response.success) {
       isHasImageData = true;
       isFavorite = isFav();
       notifyListeners();
     }
+
   }
 
   @override
@@ -78,23 +98,29 @@ class DetailMoviePageProvider extends ChangeNotifier {
 
   void getImage() async {
     final _tmdb = TMDBApi.instance;
-    final responseImage = await _tmdb.getMovieImages(movieId);
+    var responseImage;
+    if(movieType == "tv") {
+      responseImage = await _tmdb.getTVImages(movieId);
+    } else {
+      print("movie");
+      responseImage = await _tmdb.getMovieImages(movieId);
+    }
     if (responseImage.success) {
       imageModel = responseImage.result;
       notifyListeners();
     }
   }
 
+
   void favorite() {
-    if (movieDetailModel == null || movieDetailModel.id == null) return;
+    if (adapterMovieModel == null || adapterMovieModel.id == null) return;
     var boxMovie = Hive.box<FavoriteMovieHive>(BoxName.BOX_FAV_MOVIE);
-    var foundMovie = boxMovie.get(movieDetailModel.id);
+    var foundMovie = boxMovie.get(adapterMovieModel.id);
     if (foundMovie == null) {
-      print('movieDetailModel.id');
       boxMovie.put(
-          movieDetailModel.id,
-          FavoriteMovieHive(movieDetailModel.id, movieDetailModel.originalTitle,
-              movieDetailModel.releaseDate, movieDetailModel.posterPath));
+          adapterMovieModel.id,
+          FavoriteMovieHive(adapterMovieModel.id, adapterMovieModel.title,
+              adapterMovieModel.date, adapterMovieModel.posterPath, adapterMovieModel.isTvShow));
       isFavorite = true;
     } else {
       foundMovie.delete();
@@ -105,13 +131,13 @@ class DetailMoviePageProvider extends ChangeNotifier {
 
   bool isFav() {
     var boxMovie = Hive.box<FavoriteMovieHive>(BoxName.BOX_FAV_MOVIE);
-    var foundMovie = boxMovie.get(movieDetailModel.id);
+    var foundMovie = boxMovie.get(adapterMovieModel.id);
     return foundMovie != null;
   }
 
   bool isAddedToList() {
     var boxMovie = Hive.box<FavoriteMovieHive>(BoxName.BOX_FAV_MOVIE);
-    var foundMovie = boxMovie.get(movieDetailModel.id);
+    var foundMovie = boxMovie.get(adapterMovieModel.id);
     return foundMovie != null;
   }
 
@@ -143,7 +169,12 @@ class DetailMoviePageProvider extends ChangeNotifier {
 
   void getVideo() async {
     final _tmdb = TMDBApi.instance;
-    final responseVideo = await _tmdb.getMovieVideo(movieId);
+    var responseVideo;
+    if(movieType == "tv" ) {
+      responseVideo = await _tmdb.getTVVideo(movieId);
+    } else {
+      responseVideo = await _tmdb.getMovieVideo(movieId);
+    }
     if (responseVideo.success &&
         responseVideo.result != null &&
         responseVideo.result.results != null) {
@@ -151,12 +182,6 @@ class DetailMoviePageProvider extends ChangeNotifier {
       if (listVideo.isNotEmpty) {
         final url = VideoUrl.getUrl(listVideo[0].key, listVideo[0].site);
         print("${url}");
-        // videoPlayerController = VideoPlayerController.network(
-        //     "https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4");
-        // chewieController = new ChewieController(
-        //   videoPlayerController: videoPlayerController,
-        //   aspectRatio: 16 / 9,
-        // );
         videoId = listVideo[0].key;
         youtubePlayerController = YoutubePlayerController(
           initialVideoId: videoId,
@@ -207,21 +232,15 @@ class DetailMoviePageProvider extends ChangeNotifier {
     if(!isHasImageData) {
       return false;
     }
-    print("sada:${id}");
     var box = Hive.box<PlayListHive>(BoxName.BOX_PLAYLIST);
     PlayListHive playListHive = box.get(id);
-    print("sada:${id}");
 
     if(playListHive != null) {
-      var item = MovieItemListHive(movieDetailModel.id, movieDetailModel.originalTitle, movieDetailModel.releaseDate, movieDetailModel.posterPath);
-      print("sada1");
-
+      var item = MovieItemListHive(adapterMovieModel.id, adapterMovieModel.title, adapterMovieModel.date, adapterMovieModel.posterPath, adapterMovieModel.isTvShow);
       if(playListHive.listItem != null) {
-        print("sada2");
-
         bool isDuplicate = false;
         for(int index = 0; index < playListHive.listItem.length; index++) {
-          if(playListHive.listItem[index].id == movieDetailModel.id) {
+          if(playListHive.listItem[index].id == adapterMovieModel.id) {
             isDuplicate = true;
           }
         }

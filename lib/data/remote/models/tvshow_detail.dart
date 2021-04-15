@@ -47,7 +47,7 @@ class TVDetailModel {
   ReviewModel reviews;
   ExternalIdsModel externalIds;
   ContentRatingModel contentRatings;
-
+  TVDetailModel.empty();
   TVDetailModel.fromParams(
       {this.id,
       this.numberOfEpisodes,

@@ -7,6 +7,7 @@ import 'package:themoviedex/data/remote/models/enums/imagesize.dart';
 import 'package:themoviedex/generated/r.dart';
 import 'package:themoviedex/presentation/screen2/detail_celeb/acting_model.dart';
 import 'package:themoviedex/presentation/screen2/detail_celeb/detail_celeb_page_provider.dart';
+import 'package:themoviedex/presentation/screen2/detail_movies/detail_movies_page.dart';
 import 'package:themoviedex/presentation/screen2/widgets/expandable_text.dart';
 import 'package:themoviedex/presentation/util/adapt.dart';
 import 'package:themoviedex/presentation/util/app_theme.dart';
@@ -308,44 +309,50 @@ class _DetailCelebPageState extends State<DetailCelebPage> {
   }
 
   Widget buildKnowAsItem(CombinedCastData itemData) {
-    return Container(
-      margin: EdgeInsets.only(left: 10, right: 10),
-      width: widthItemKnowFor,
-      height: heightItemKnowFor,
-      child: IntrinsicWidth(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-              child: CachedNetworkImage(
-                imageUrl: ImageUrl.getUrl(itemData.posterPath, ImageSize.w300),
-                fit: BoxFit.cover,
-                width: widthItemKnowFor,
-                height: heightImageKnowFor,
-                placeholder: (context, url) => Image.asset(
-                  R.img_image_thumb,
+    return GestureDetector(
+      onTap: () {
+        NavigatorUtil.pushPage(context, DetailMoviePage(movieId: itemData.id, movieType: itemData.mediaType,));
+
+      },
+      child: Container(
+        margin: EdgeInsets.only(left: 10, right: 10),
+        width: widthItemKnowFor,
+        height: heightItemKnowFor,
+        child: IntrinsicWidth(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                child: CachedNetworkImage(
+                  imageUrl: ImageUrl.getUrl(itemData.posterPath, ImageSize.w300),
+                  fit: BoxFit.cover,
                   width: widthItemKnowFor,
                   height: heightImageKnowFor,
-                  fit: BoxFit.cover,
-                ),
-                errorWidget: (context, url, error) => Image.asset(
-                  R.img_image_thumb,
-                  width: widthItemKnowFor,
-                  height: heightImageKnowFor,
-                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Image.asset(
+                    R.img_image_thumb,
+                    width: widthItemKnowFor,
+                    height: heightImageKnowFor,
+                    fit: BoxFit.cover,
+                  ),
+                  errorWidget: (context, url, error) => Image.asset(
+                    R.img_image_thumb,
+                    width: widthItemKnowFor,
+                    height: heightImageKnowFor,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              itemData.originalTitle ?? "",
-              maxLines: 2,
-              style: TextStyle(height: 1, fontSize: 16, color: Colors.white),
-            ),
-          ],
+              SizedBox(
+                height: 10,
+              ),
+              Text(
+                itemData.originalTitle ?? "",
+                maxLines: 2,
+                style: TextStyle(height: 1, fontSize: 16, color: Colors.white),
+              ),
+            ],
+          ),
         ),
       ),
     );

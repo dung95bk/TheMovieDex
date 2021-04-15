@@ -8,6 +8,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:themoviedex/data/remote/models/enums/imagesize.dart';
 import 'package:themoviedex/data/remote/models/models.dart';
 import 'package:themoviedex/generated/r.dart';
+import 'package:themoviedex/presentation/screen2/detail_movies/detail_movies_page.dart';
 import 'package:themoviedex/presentation/screen2/list_movie/list_movie_page.dart';
 import 'package:themoviedex/presentation/screen2/main/components/home/movies/movies_page_provider.dart';
 import 'package:themoviedex/presentation/screen2/main/components/home/movies/slider_custom_widget.dart';
@@ -221,67 +222,72 @@ class _MoviesPageState extends State<MoviesPage> {
     } else if (index == listLength - 1) {
       margin = EdgeInsets.only(left: marginList, right: marginList, bottom: 40);
     }
-    return Container(
-        width: itemTopRatedWidth,
-        height: itemTopRatedHeight,
-        padding: EdgeInsets.only(left: 20, right: 20),
-        margin: margin,
-        decoration: BoxDecoration(
-            color: AppTheme.bottomNavigationBarBackgroundt,
-            borderRadius: buildBackgroundItemTopRate(index, listLength)),
-        child: Row(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-              child: CachedNetworkImage(
-                  imageUrl:
-                      ImageUrl.getUrl(itemData.posterPath, ImageSize.w300),
-                  fit: BoxFit.cover,
-                  height: itemTopRatedImageHeight,
-                  width: itemTopRatedImageWidth,
-                  placeholder: (context, url) => Image.asset(
-                        R.img_image_thumb,
-                        height: itemTopRatedImageHeight,
-                        width: itemTopRatedImageWidth,
-                        fit: BoxFit.cover,
-                      ),
-                  errorWidget: (context, url, error) => Image.asset(
-                        R.img_image_thumb,
-                        height: itemTopRatedImageHeight,
-                        width: itemTopRatedImageWidth,
-                        fit: BoxFit.cover,
-                      )),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Flexible(
-                      fit: FlexFit.loose,
-                      child: Text(
-                        itemData.title,
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      )),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Flexible(
-                      fit: FlexFit.loose,
-                      child: Text(
-                        "${itemData.releaseDate}",
-                        style: TextStyle(color: Color(0xffc9cbcd)),
-                      )),
-                ],
+    return GestureDetector(
+      onTap: () {
+        NavigatorUtil.pushPage(context, DetailMoviePage(movieId: itemData.id, movieType: "movie",));
+      },
+      child: Container(
+          width: itemTopRatedWidth,
+          height: itemTopRatedHeight,
+          padding: EdgeInsets.only(left: 20, right: 20),
+          margin: margin,
+          decoration: BoxDecoration(
+              color: AppTheme.bottomNavigationBarBackgroundt,
+              borderRadius: buildBackgroundItemTopRate(index, listLength)),
+          child: Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                child: CachedNetworkImage(
+                    imageUrl:
+                        ImageUrl.getUrl(itemData.posterPath, ImageSize.w300),
+                    fit: BoxFit.cover,
+                    height: itemTopRatedImageHeight,
+                    width: itemTopRatedImageWidth,
+                    placeholder: (context, url) => Image.asset(
+                          R.img_image_thumb,
+                          height: itemTopRatedImageHeight,
+                          width: itemTopRatedImageWidth,
+                          fit: BoxFit.cover,
+                        ),
+                    errorWidget: (context, url, error) => Image.asset(
+                          R.img_image_thumb,
+                          height: itemTopRatedImageHeight,
+                          width: itemTopRatedImageWidth,
+                          fit: BoxFit.cover,
+                        )),
               ),
-            ),
-            buildTopRatedRank(index)
-          ],
-        ));
+              SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Flexible(
+                        fit: FlexFit.loose,
+                        child: Text(
+                          itemData.title,
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        )),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Flexible(
+                        fit: FlexFit.loose,
+                        child: Text(
+                          "${itemData.releaseDate}",
+                          style: TextStyle(color: Color(0xffc9cbcd)),
+                        )),
+                  ],
+                ),
+              ),
+              buildTopRatedRank(index)
+            ],
+          )),
+    );
   }
 
   Widget buildTopRatedRank(int index) {
@@ -370,6 +376,9 @@ class _MoviesPageState extends State<MoviesPage> {
 
     return SliderCustomWidget(
       provider: provider,
+      onItemClick: (int id) {
+        NavigatorUtil.pushPage(context, DetailMoviePage(movieId: id, movieType: "movie",));
+      },
     );
   }
 }

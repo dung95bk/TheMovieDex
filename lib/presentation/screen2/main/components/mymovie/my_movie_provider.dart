@@ -30,4 +30,11 @@ class MyMovieProvider extends ChangeNotifier {
     }
   }
 
+  void deleteFavorite(int id, int index) {
+    var boxMovie = Hive.box<FavoriteMovieHive>(BoxName.BOX_FAV_MOVIE);
+    boxMovie.delete(id);
+    listFavorite.removeAt(index);
+    notifyListeners();
+  }
+
 }

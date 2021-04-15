@@ -43,11 +43,12 @@ class _StateItemCustomWidget extends State<ItemTVShowWidget> {
     } else {
       itemData = widget.itemData;
     }
+    print("Data Item: ${itemData}" );
     return Builder(builder: (BuildContext context) {
       return GestureDetector(
         onTap: () {
           print("asdad");
-          NavigatorUtil.pushPage(context, DetailMoviePage(movieId: itemData.id,));
+          NavigatorUtil.pushPage(context, DetailMoviePage(movieId: itemData.id, movieType: widget.isTvShow ? "tv" : "movie",));
         },
         child: ChangeNotifierProvider(
           create: (context) => ItemCustomModel(),

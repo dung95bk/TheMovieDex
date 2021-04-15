@@ -9,17 +9,19 @@ import 'package:shimmer/shimmer.dart';
 import 'package:themoviedex/data/remote/models/enums/imagesize.dart';
 import 'package:themoviedex/data/remote/models/models.dart';
 import 'package:themoviedex/generated/r.dart';
+import 'package:themoviedex/presentation/screen2/detail_movies/detail_movies_page.dart';
 import 'package:themoviedex/presentation/screen2/main/components/home/movies/custom_pageview_widget.dart';
 import 'package:themoviedex/presentation/screen2/main/components/home/movies/slider_custom_widget_provider.dart';
 import 'package:themoviedex/presentation/util/adapt.dart';
 import 'package:themoviedex/presentation/util/app_theme.dart';
 import 'package:themoviedex/presentation/util/imageurl.dart';
+import 'package:themoviedex/presentation/util/navigator_util.dart';
 
 class SliderCustomWidget extends StatefulWidget {
   SliderCustomWidgetProvider provider;
   PageStorageKey sliderKey= PageStorageKey("P");
-
-  SliderCustomWidget({Key key, this.provider}) : super(key: key);
+  ValueChanged<int> onItemClick;
+  SliderCustomWidget({Key key, this.provider, this.onItemClick}) : super(key: key);
 
   @override
   _SliderCustomWidgetState createState() {
@@ -168,70 +170,75 @@ class _SliderCustomWidgetState extends State<SliderCustomWidget> {
   }
 
   Widget buildItemSlider(double lerpScale, double opacity, VideoListResult itemData) {
-    return Transform.scale(
-      scale: lerpScale,
-      //đẩy item xuống 50px
-      child: Opacity(
-        //phủ mờ 50%
-        opacity: (1 - opacity),
-        child: IntrinsicHeight(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                child: CachedNetworkImage(
-                  imageUrl:
-                  ImageUrl.getUrl(itemData.posterPath, ImageSize.w300),
-                  fit: BoxFit.cover,
-                  height: itemSliderWidth,
+    return GestureDetector(
+      onTap: () {
+        widget.onItemClick(itemData.id);
+      },
+      child: Transform.scale(
+        scale: lerpScale,
+        //đẩy item xuống 50px
+        child: Opacity(
+          //phủ mờ 50%
+          opacity: (1 - opacity),
+          child: IntrinsicHeight(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  child: CachedNetworkImage(
+                    imageUrl:
+                    ImageUrl.getUrl(itemData.posterPath, ImageSize.w300),
+                    fit: BoxFit.cover,
+                    height: itemSliderWidth,
+                    width: itemSliderWidth,
+                    placeholder: (context, url) => Image.asset(R.img_image_thumb,
+                      width: itemSliderWidth,
+                      height: itemSliderWidth,
+                      fit: BoxFit.cover,
+
+                    ),
+                    errorWidget: (context, url, error) => Image.asset(R.img_image_thumb,
+                      width: itemSliderWidth,
+                      height: itemSliderWidth,
+                      fit: BoxFit.cover,
+
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
                   width: itemSliderWidth,
-                  placeholder: (context, url) => Image.asset(R.img_image_thumb,
-                    width: itemSliderWidth,
-                    height: itemSliderWidth,
-                    fit: BoxFit.cover,
-
-                  ),
-                  errorWidget: (context, url, error) => Image.asset(R.img_image_thumb,
-                    width: itemSliderWidth,
-                    height: itemSliderWidth,
-                    fit: BoxFit.cover,
-
+                  child: Text(
+                    itemData.title == null ? "" : itemData.title,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                width: itemSliderWidth,
-                child: Text(
-                  itemData.title == null ? "" : itemData.title,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                  ),
+                SizedBox(
+                  height: 10,
                 ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                width: itemSliderWidth,
-                child: Text(
-                  itemData.releaseDate,
-                  maxLines: 1,
-                  style: TextStyle(
-                    color: Color(0xffc9cbcd),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
+                Container(
+                  width: itemSliderWidth,
+                  child: Text(
+                    itemData.releaseDate,
+                    maxLines: 1,
+                    style: TextStyle(
+                      color: Color(0xffc9cbcd),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ),
       ),

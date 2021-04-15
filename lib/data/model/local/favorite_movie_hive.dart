@@ -11,5 +11,7 @@ class FavoriteMovieHive extends HiveObject {
   String date;
   @HiveField(13)
   String posterPath;
-  FavoriteMovieHive(this.id, this.title, this.date, this.posterPath);
+  @HiveField(14)
+  bool isTvShow;
+  FavoriteMovieHive(this.id, this.title, this.date, this.posterPath, this.isTvShow);
 }

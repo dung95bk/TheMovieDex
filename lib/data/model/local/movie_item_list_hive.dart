@@ -10,5 +10,7 @@ class MovieItemListHive extends HiveObject {
   String date;
   @HiveField(13)
   String posterPath;
-  MovieItemListHive(this.id, this.title, this.date, this.posterPath);
+  @HiveField(14)
+  bool isTvShow;
+  MovieItemListHive(this.id, this.title, this.date, this.posterPath, this.isTvShow);
 }
