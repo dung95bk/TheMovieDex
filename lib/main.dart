@@ -17,6 +17,7 @@ import 'package:themoviedex/presentation/screen2/main/components/mymovie/my_movi
 import 'package:themoviedex/presentation/screen2/main/components/search/search_page_provider.dart';
 import 'package:themoviedex/presentation/screen2/main/main_page_provider.dart';
 import 'package:themoviedex/presentation/screen2/splash/splash_page.dart';
+import 'package:themoviedex/presentation/screen2/testads/myapp.dart';
 
 import 'data/helper/box_name.dart';
 
@@ -97,7 +98,7 @@ class _MyAppState extends State<MyApp> {
         bottomSheetTheme:  BottomSheetThemeData(
             backgroundColor: Colors.black.withOpacity(0)),
       ),
-      home: SplashPage(data: "data",),
+      home: MyTestApp(),
       onGenerateRoute: routeHandler,
     );
   }

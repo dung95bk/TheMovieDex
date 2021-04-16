@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:themoviedex/presentation/custom_widgets/keepalive_widget.dart';
 import 'package:themoviedex/presentation/screen2/main/components/celeb/celeb_page.dart';
 import 'package:themoviedex/presentation/screen2/main/components/home/home_page.dart';
-import 'package:themoviedex/presentation/screen2/main/components/more/more_page.dart';
 import 'package:themoviedex/presentation/screen2/main/components/mymovie/my_movie_page.dart';
 import 'package:themoviedex/presentation/screen2/main/components/search/search_page.dart';
 import 'package:themoviedex/presentation/screen2/main/main_page_provider.dart';
