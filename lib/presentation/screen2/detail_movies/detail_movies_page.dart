@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'dart:ui' as ui;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,6 @@ import 'package:themoviedex/presentation/util/app_theme.dart';
 import 'package:themoviedex/presentation/util/imageurl.dart';
 import 'package:themoviedex/presentation/util/navigator_util.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-import 'dart:ui' as ui;
 
 class DetailMoviePage extends StatefulWidget {
   int movieId;
@@ -1087,7 +1087,7 @@ class _DetailMoviePageState extends State<DetailMoviePage>
             color: AppTheme.bottomNavigationBarBackground_light,
             child: InkWell(
               onTap: () {
-                NavigatorUtil.pushPage(
+                NavigatorUtil.pushPageWithInterstitialAd(
                     context,
                     DetailCelebPage(
                         celebId: itemData.id,

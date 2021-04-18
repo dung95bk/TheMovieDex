@@ -43,41 +43,38 @@ class _TvShowPageState extends State<TvShowPage> {
     double marginTop = Adapt.px(30);
     widthItem = screenWidth - marginLeft * 2 - itemMargin * 4;
     return Column(
-      children: [
-     
-        Expanded(child: _createListTvShow())
-      ],
+      children: [Expanded(child: _createListTvShow())],
     );
   }
 
   Widget _createListTvShow() {
     return Consumer(builder: (context, TvShowPageProvider provider, child) {
-
-        return ListView.builder(
-          controller: provider.scrollController,
-          scrollDirection: Axis.vertical,
-          itemCount: provider.listTvShow.length == 0 ? 21 : provider.listTvShow.length  + 1,
-          itemBuilder: (context, index) {
-            if (index == 0) {
-              double heightGridView = (widthItem + itemMargin * 2) * 2;
-              double marginLeft = Adapt.px(10);
-              double marginTop = Adapt.px(30);
-              return Container(
-                  height: Adapt.px(heightGridView),
-                  margin: EdgeInsets.only(
-                      top: marginTop, left: marginLeft, right: marginLeft),
-                  child: _createGridCategory());
+      return ListView.builder(
+        controller: provider.scrollController,
+        scrollDirection: Axis.vertical,
+        itemCount: provider.listTvShow.length == 0
+            ? 21
+            : provider.listTvShow.length + 1,
+        itemBuilder: (context, index) {
+          if (index == 0) {
+            double heightGridView = (widthItem + itemMargin * 2) * 2;
+            double marginLeft = Adapt.px(10);
+            double marginTop = Adapt.px(30);
+            return Container(
+                height: Adapt.px(heightGridView),
+                margin: EdgeInsets.only(
+                    top: marginTop, left: marginLeft, right: marginLeft),
+                child: _createGridCategory());
+          } else {
+            if (provider.listTvShow.length == 0) {
+              return ShimmerItem();
             } else {
-              if(provider.listTvShow.length == 0) {
-                return ShimmerItem();
-              } else {
-                VideoListResult itemData = provider.listTvShow[index - 1];
-                return createItemListTvShow(itemData);
-              }
+              VideoListResult itemData = provider.listTvShow[index - 1];
+              return createItemListTvShow(itemData);
             }
-          },
-        );
-
+          }
+        },
+      );
     });
   }
 
@@ -87,22 +84,34 @@ class _TvShowPageState extends State<TvShowPage> {
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           childAspectRatio: 1 / 1, crossAxisCount: 2),
       children: [
-        createItemGridCategory(R.img_ic_tv_popular, "Popular", TYPE_LIST_TVSHOW_POPULAR),
-        createItemGridCategory(R.img_ic_tv_ontv, "On TV", TYPE_LIST_TVSHOW_ONTV),
-        createItemGridCategory(R.img_ic_tv_toprate, "Top Rated", TYPE_LIST_TVSHOW_TOPRATED),
-        createItemGridCategory(R.img_ic_tv_airing, "Airing Today", TYPE_LIST_TVSHOW_AIRING_TODAY),
+        createItemGridCategory(
+            R.img_ic_tv_popular, "Popular", TYPE_LIST_TVSHOW_POPULAR),
+        createItemGridCategory(
+            R.img_ic_tv_ontv, "On TV", TYPE_LIST_TVSHOW_ONTV),
+        createItemGridCategory(
+            R.img_ic_tv_toprate, "Top Rated", TYPE_LIST_TVSHOW_TOPRATED),
+        createItemGridCategory(
+            R.img_ic_tv_airing, "Airing Today", TYPE_LIST_TVSHOW_AIRING_TODAY),
       ],
     );
   }
 
   Widget createItemListTvShow(VideoListResult itemData) {
-    return ItemTVShowWidget(  key: ValueKey(itemData.id), itemData: itemData,);
+    return ItemTVShowWidget(
+      key: ValueKey(itemData.id),
+      itemData: itemData,
+    );
   }
 
   Widget createItemGridCategory(String icon, String label, int type) {
     return GestureDetector(
       onTap: () {
-        NavigatorUtil.pushPage(context, ListMoviePage(title: label, typeList: type,));
+        NavigatorUtil.pushPageWithInterstitialAd(
+            context,
+            ListMoviePage(
+              title: label,
+              typeList: type,
+            ));
       },
       child: Container(
         margin: EdgeInsets.all(itemMargin),

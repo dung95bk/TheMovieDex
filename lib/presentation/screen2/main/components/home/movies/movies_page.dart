@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -117,7 +116,7 @@ class _MoviesPageState extends State<MoviesPage> {
           GestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: () {
-              NavigatorUtil.pushPage(
+              NavigatorUtil.pushPageWithInterstitialAd(
                   context,
                   ListMoviePage(
                     title: "Top Rated Movies",
@@ -223,7 +222,12 @@ class _MoviesPageState extends State<MoviesPage> {
     }
     return GestureDetector(
       onTap: () {
-        NavigatorUtil.pushPage(context, DetailMoviePage(movieId: itemData.id, movieType: "movie",));
+        NavigatorUtil.pushPageWithInterstitialAd(
+            context,
+            DetailMoviePage(
+              movieId: itemData.id,
+              movieType: "movie",
+            ));
       },
       child: Container(
           width: itemTopRatedWidth,
@@ -332,7 +336,7 @@ class _MoviesPageState extends State<MoviesPage> {
             child: GestureDetector(
               behavior: HitTestBehavior.translucent,
               onTap: () {
-                NavigatorUtil.pushPage(
+                NavigatorUtil.pushPageWithInterstitialAd(
                     context,
                     ListMoviePage(
                       title: "Now Playing Movies",
@@ -352,7 +356,7 @@ class _MoviesPageState extends State<MoviesPage> {
             child: GestureDetector(
               behavior: HitTestBehavior.translucent,
               onTap: () {
-                NavigatorUtil.pushPage(
+                NavigatorUtil.pushPageWithInterstitialAd(
                     context,
                     ListMoviePage(
                       title: "Popular Movies",
@@ -376,7 +380,12 @@ class _MoviesPageState extends State<MoviesPage> {
     return SliderCustomWidget(
       provider: provider,
       onItemClick: (int id) {
-        NavigatorUtil.pushPage(context, DetailMoviePage(movieId: id, movieType: "movie",));
+        NavigatorUtil.pushPageWithInterstitialAd(
+            context,
+            DetailMoviePage(
+              movieId: id,
+              movieType: "movie",
+            ));
       },
     );
   }

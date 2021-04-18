@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:themoviedex/presentation/screen2/testads/ads_manager.dart';
 
 class NavigatorUtil {
   static Future pushPageNamed(
@@ -13,7 +14,6 @@ class NavigatorUtil {
     return Navigator.pushReplacementNamed(context, link, arguments: arguments);
   }
 
-
   static Future pushPage(BuildContext context, Widget page) {
     var val = Navigator.push(
       context,
@@ -25,6 +25,10 @@ class NavigatorUtil {
     );
 
     return val;
+  }
+
+  static void pushPageWithInterstitialAd(BuildContext context, Widget page) {
+    AdsManager.instance.showInterstitialAd(context, page);
   }
 
   static Future pushPageDialog(BuildContext context, Widget page) {

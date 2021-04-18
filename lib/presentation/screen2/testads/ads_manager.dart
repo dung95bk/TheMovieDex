@@ -1,23 +1,27 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:themoviedex/presentation/util/navigator_util.dart';
 
 const String testDevice = 'YOUR_DEVICE_ID';
 
 class AdsManager {
   AdsManager._();
+
   static final AdsManager _instance = AdsManager._();
+
   static AdsManager get instance => _instance;
 
   InterstitialAd _interstitialAd;
-  bool _interstitialReady = false;
+  bool interstitialReady = false;
 
   RewardedAd _rewardedAd;
-  bool _rewardedReady = false;
+  bool rewardedReady = false;
 
   BannerAd _bannerAd;
   bool bannerAdIsLoaded = false;
-  NativeAd _nativeAd;
+  NativeAd nativeAd;
   bool nativeAdIsLoaded = false;
   PublisherBannerAd _publisherBannerAd;
   bool publisherBannerAdIsLoaded = false;
@@ -29,7 +33,11 @@ class AdsManager {
   static const int maxRetryLoadInterstitialAd = 4;
   static const int maxRetryLoadVideoReward = 4;
 
+  static const int timesToShowInterstitialAd = 4;
+  int countToShowInterstitialAd = 0;
 
+  Widget targetWidget;
+  BuildContext targetContext;
   static final AdRequest request = AdRequest(
     testDevices: <String>[testDevice],
     keywords: <String>['foo', 'bar'],
@@ -42,35 +50,35 @@ class AdsManager {
       print('Initialization done: ${status.adapterStatuses}');
       MobileAds.instance
           .updateRequestConfiguration(RequestConfiguration(
-          tagForChildDirectedTreatment:
-          TagForChildDirectedTreatment.unspecified))
+              tagForChildDirectedTreatment:
+                  TagForChildDirectedTreatment.unspecified))
           .then((void value) {
         createInterstitialAd();
-        createRewardedAd();
+        // createRewardedAd();
       });
     });
+  }
+
+  bool isCanShowNativeAds() {
+    return nativeAdIsLoaded && nativeAd != null;
   }
 
   void reset() {
     timesRetryLoadInterstitialAd = 0;
     timesRetryLoadVideoRewardAd = 0;
 
-
-
-
     _interstitialAd = null;
-    _interstitialReady = false;
+    interstitialReady = false;
 
     _rewardedAd = null;
-    _rewardedReady = false;
+    rewardedReady = false;
 
     _bannerAd = null;
     bannerAdIsLoaded = false;
-     _nativeAd = null;
-     nativeAdIsLoaded = false;
+    nativeAd = null;
+    nativeAdIsLoaded = false;
     _publisherBannerAd = null;
     publisherBannerAdIsLoaded = false;
-
   }
 
   void createBannerAd() {
@@ -96,8 +104,13 @@ class AdsManager {
       ..load();
   }
 
-  void createNativeAd() {
-    _nativeAd = NativeAd(
+  void disposeBanner() {
+    _bannerAd?.dispose();
+    _bannerAd = null;
+  }
+
+  void createNativeAd(ValueChanged<bool> adsLoaded) {
+    nativeAd = NativeAd(
       adUnitId: Platform.isAndroid
           ? 'ca-app-pub-3940256099942544/2247696110'
           : 'ca-app-pub-3940256099942544/3986624511',
@@ -107,6 +120,7 @@ class AdsManager {
         onAdLoaded: (Ad ad) {
           print('$NativeAd loaded.');
           nativeAdIsLoaded = true;
+          adsLoaded(nativeAdIsLoaded);
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
           print('$NativeAd failedToLoad: $error');
@@ -117,7 +131,12 @@ class AdsManager {
         onApplicationExit: (Ad ad) => print('$NativeAd onApplicationExit.'),
       ),
     )..load();
+  }
 
+  void disposeNativeAds() {
+    nativeAdIsLoaded = false;
+    nativeAd?.dispose();
+    nativeAd = null;
   }
 
   void createPublisherAd() {
@@ -149,14 +168,14 @@ class AdsManager {
       listener: AdListener(
         onAdLoaded: (Ad ad) {
           print('${ad.runtimeType} loaded.');
-          _interstitialReady = true;
+          interstitialReady = true;
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
           print('${ad.runtimeType} failed to load: $error.');
           ad.dispose();
           _interstitialAd = null;
           timesRetryLoadInterstitialAd += 1;
-          if(timesRetryLoadInterstitialAd <= maxRetryLoadInterstitialAd) {
+          if (timesRetryLoadInterstitialAd <= maxRetryLoadInterstitialAd) {
             createInterstitialAd();
           }
         },
@@ -165,12 +184,24 @@ class AdsManager {
           print('${ad.runtimeType} closed.');
           ad.dispose();
           createInterstitialAd();
+          _showTargetWidget();
+          resetTarget();
         },
         onApplicationExit: (Ad ad) =>
             print('${ad.runtimeType} onApplicationExit.'),
       ),
-    )
-      ..load();
+    )..load();
+  }
+
+  void resetTarget() {
+    targetContext = null;
+    targetWidget = null;
+  }
+
+  void _showTargetWidget() {
+    if (targetContext != null && targetWidget != null) {
+      NavigatorUtil.pushPageWithInterstitialAd(targetContext, targetWidget);
+    }
   }
 
   void createRewardedAd() {
@@ -180,51 +211,65 @@ class AdsManager {
       listener: AdListener(
           onAdLoaded: (Ad ad) {
             print('${ad.runtimeType} loaded.');
-            _rewardedReady = true;
+            rewardedReady = true;
           },
           onAdFailedToLoad: (Ad ad, LoadAdError error) {
             print('${ad.runtimeType} failed to load: $error');
             ad.dispose();
             _rewardedAd = null;
-            createRewardedAd();
+            timesRetryLoadVideoRewardAd += 1;
+            if (timesRetryLoadVideoRewardAd <= maxRetryLoadVideoReward) {
+              createRewardedAd();
+            }
           },
           onAdOpened: (Ad ad) => print('${ad.runtimeType} onAdOpened.'),
           onAdClosed: (Ad ad) {
             print('${ad.runtimeType} closed.');
             ad.dispose();
-            timesRetryLoadVideoRewardAd += 1;
-            if(timesRetryLoadVideoRewardAd <= maxRetryLoadVideoReward) {
-              createRewardedAd();
-            }
+            createRewardedAd();
           },
           onApplicationExit: (Ad ad) =>
               print('${ad.runtimeType} onApplicationExit.'),
           onRewardedAdUserEarnedReward: (RewardedAd ad, RewardItem reward) {
             print(
-              '$RewardedAd with reward $RewardItem(${reward.amount}, ${reward
-                  .type})',
+              '$RewardedAd with reward $RewardItem(${reward.amount}, ${reward.type})',
             );
           }),
-    )
-      ..load();
+    )..load();
+  }
 
-    void dispose() {
-      _interstitialAd?.dispose();
-      _rewardedAd?.dispose();
+  void dispose() {
+    _interstitialAd?.dispose();
+    _rewardedAd?.dispose();
+  }
+
+  void showInterstitialAd(BuildContext context, Widget targetWidget) {
+    if (!interstitialReady) {
+      NavigatorUtil.pushPage(context, targetWidget);
+      return;
     }
 
-    void showInterstitialAd() {
-      if (!_interstitialReady) return;
-      _interstitialAd.show();
-      _interstitialReady = false;
-      _interstitialAd = null;
+    countToShowInterstitialAd += 1;
+    if (countToShowInterstitialAd != timesToShowInterstitialAd) {
+      print("changepage");
+      NavigatorUtil.pushPage(context, targetWidget);
+      return;
+    } else {
+      countToShowInterstitialAd = 0;
     }
+    this.targetWidget = targetWidget;
+    this.targetContext = context;
+    print("isReady:${interstitialReady}");
 
-    void showRewardedAd() {
-      if (!_rewardedReady) return;
-      _rewardedAd.show();
-      _rewardedReady = false;
-      _rewardedAd = null;
-    }
+    _interstitialAd.show();
+    interstitialReady = false;
+    _interstitialAd = null;
+  }
+
+  void showRewardedAd() {
+    if (!rewardedReady) return;
+    _rewardedAd.show();
+    rewardedReady = false;
+    _rewardedAd = null;
   }
 }

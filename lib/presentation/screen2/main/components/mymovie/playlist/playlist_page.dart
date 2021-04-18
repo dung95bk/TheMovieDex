@@ -15,7 +15,7 @@ import 'package:themoviedex/presentation/util/navigator_util.dart';
 class PlayListPage extends StatefulWidget {
   String playListId;
   PlayListPage({Key key, this.playListId}) : super(key: key);
-  
+
   @override
   _PlayListPageState createState() {
     return _PlayListPageState();
@@ -92,7 +92,6 @@ class _PlayListPageState extends State<PlayListPage> {
                         ),
                       ],
                     ),
-
                     SizedBox(
                       height: 20,
                     ),
@@ -124,7 +123,12 @@ class _PlayListPageState extends State<PlayListPage> {
   Widget buildItemAlbum(MovieItemListHive itemData, int index) {
     return GestureDetector(
       onTap: () {
-        NavigatorUtil.pushPage(context, DetailMoviePage(movieId: itemData.id, movieType: itemData.isTvShow ? "tv" : "movie",));
+        NavigatorUtil.pushPageWithInterstitialAd(
+            context,
+            DetailMoviePage(
+              movieId: itemData.id,
+              movieType: itemData.isTvShow ? "tv" : "movie",
+            ));
       },
       child: Container(
           margin: EdgeInsets.only(top: 20),

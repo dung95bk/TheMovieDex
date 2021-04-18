@@ -7,9 +7,9 @@ import 'package:themoviedex/data/remote/models/models.dart';
 import 'package:themoviedex/generated/r.dart';
 import 'package:themoviedex/presentation/screen2/detail_movies/detail_movies_page.dart';
 import 'package:themoviedex/presentation/util/adapt.dart';
-import 'package:themoviedex/presentation/util/app_theme.dart';
 import 'package:themoviedex/presentation/util/imageurl.dart';
 import 'package:themoviedex/presentation/util/navigator_util.dart';
+
 import 'RPSCustomPainter.dart';
 import 'item_custom_model.dart';
 
@@ -43,12 +43,17 @@ class _StateItemCustomWidget extends State<ItemTVShowWidget> {
     } else {
       itemData = widget.itemData;
     }
-    print("Data Item: ${itemData}" );
+    print("Data Item: ${itemData}");
     return Builder(builder: (BuildContext context) {
       return GestureDetector(
         onTap: () {
           print("asdad");
-          NavigatorUtil.pushPage(context, DetailMoviePage(movieId: itemData.id, movieType: widget.isTvShow ? "tv" : "movie",));
+          NavigatorUtil.pushPageWithInterstitialAd(
+              context,
+              DetailMoviePage(
+                movieId: itemData.id,
+                movieType: widget.isTvShow ? "tv" : "movie",
+              ));
         },
         child: ChangeNotifierProvider(
           create: (context) => ItemCustomModel(),
@@ -89,7 +94,8 @@ class _StateItemCustomWidget extends State<ItemTVShowWidget> {
                                   height: _cardHeight,
                                   fit: BoxFit.cover,
                                 ),
-                                errorWidget: (context, url, error) => Image.asset(
+                                errorWidget: (context, url, error) =>
+                                    Image.asset(
                                   R.img_image_thumb,
                                   width: _cardHeight,
                                   height: _cardHeight,
@@ -112,7 +118,8 @@ class _StateItemCustomWidget extends State<ItemTVShowWidget> {
                                       child: Text(
                                         widget.isTvShow
                                             ? (itemData.name ?? "null")
-                                            : (itemData.originalTitle ?? "null"),
+                                            : (itemData.originalTitle ??
+                                                "null"),
                                         maxLines: 2,
                                         style: TextStyle(
                                           color: Colors.white,

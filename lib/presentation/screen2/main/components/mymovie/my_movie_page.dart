@@ -150,7 +150,11 @@ class _MyMoviePageState extends State<MyMoviePage> {
     }
     return GestureDetector(
       onTap: () {
-        NavigatorUtil.pushPage(context, PlayListPage(playListId: itemData.id,));
+        NavigatorUtil.pushPageWithInterstitialAd(
+            context,
+            PlayListPage(
+              playListId: itemData.id,
+            ));
       },
       child: Container(
           margin: EdgeInsets.only(right: 20),
@@ -239,7 +243,12 @@ class _MyMoviePageState extends State<MyMoviePage> {
   Widget buildItemFavorite(FavoriteMovieHive itemData, int index) {
     return GestureDetector(
       onTap: () {
-        NavigatorUtil.pushPage(context, DetailMoviePage(movieId: itemData.id, movieType: itemData.isTvShow ? "tv" : "movie",));
+        NavigatorUtil.pushPageWithInterstitialAd(
+            context,
+            DetailMoviePage(
+              movieId: itemData.id,
+              movieType: itemData.isTvShow ? "tv" : "movie",
+            ));
       },
       child: Container(
           margin: EdgeInsets.only(top: 20),

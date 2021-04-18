@@ -99,9 +99,8 @@ class _DetailCelebPageState extends State<DetailCelebPage> {
               ),
             );
             if (provider.listKnowForAll.isNotEmpty) {
-              listWidget.addAll(provider.listActing
-                  .map((e) => buildActingItem(e))
-                  .toList());
+              listWidget.addAll(
+                  provider.listActing.map((e) => buildActingItem(e)).toList());
             }
             return SafeArea(
               child: Scaffold(
@@ -311,8 +310,12 @@ class _DetailCelebPageState extends State<DetailCelebPage> {
   Widget buildKnowAsItem(CombinedCastData itemData) {
     return GestureDetector(
       onTap: () {
-        NavigatorUtil.pushPage(context, DetailMoviePage(movieId: itemData.id, movieType: itemData.mediaType,));
-
+        NavigatorUtil.pushPageWithInterstitialAd(
+            context,
+            DetailMoviePage(
+              movieId: itemData.id,
+              movieType: itemData.mediaType,
+            ));
       },
       child: Container(
         margin: EdgeInsets.only(left: 10, right: 10),
@@ -325,7 +328,8 @@ class _DetailCelebPageState extends State<DetailCelebPage> {
               ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
                 child: CachedNetworkImage(
-                  imageUrl: ImageUrl.getUrl(itemData.posterPath, ImageSize.w300),
+                  imageUrl:
+                      ImageUrl.getUrl(itemData.posterPath, ImageSize.w300),
                   fit: BoxFit.cover,
                   width: widthItemKnowFor,
                   height: heightImageKnowFor,
@@ -449,19 +453,20 @@ class _DetailCelebPageState extends State<DetailCelebPage> {
   }
 
   Widget buildActingItem(ActingModel actingModel) {
-
     return Column(
       children: [
-        Divider(thickness: 1,color: AppTheme.bottomNavigationBarBackgroundt,indent: 100,),
+        Divider(
+          thickness: 1,
+          color: AppTheme.bottomNavigationBarBackgroundt,
+          indent: 100,
+        ),
         Container(
             margin: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
-
                   children: [
                     Container(
                       alignment: Alignment.center,
@@ -469,22 +474,23 @@ class _DetailCelebPageState extends State<DetailCelebPage> {
                       height: 80,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        border: Border.all(width: 2, color: AppTheme.bg_rank_top_rate),
+                        border: Border.all(
+                            width: 2, color: AppTheme.bg_rank_top_rate),
                       ),
                       child: Text(
                         "${actingModel.year}",
-                        style:
-                        TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
                       ),
                     ),
-                    SizedBox(width: 20,),
+                    SizedBox(
+                      width: 20,
+                    ),
                     Flexible(
                       fit: FlexFit.loose,
                       child: Text(
-                        actingModel.tilte, style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20
-                      ),
+                        actingModel.tilte,
+                        style: TextStyle(color: Colors.white, fontSize: 20),
                       ),
                     )
                   ],

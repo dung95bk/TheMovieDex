@@ -93,9 +93,12 @@ class _CelebPageState extends State<CelebPage> {
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
                     colors: [
-                      AppTheme.bottomNavigationBarBackground_light.withOpacity(0),
-                      AppTheme.bottomNavigationBarBackground_light.withOpacity(0.1),
-                      AppTheme.bottomNavigationBarBackground_light.withOpacity(0.9),
+                      AppTheme.bottomNavigationBarBackground_light
+                          .withOpacity(0),
+                      AppTheme.bottomNavigationBarBackground_light
+                          .withOpacity(0.1),
+                      AppTheme.bottomNavigationBarBackground_light
+                          .withOpacity(0.9),
                     ],
                     stops: [
                       0,
@@ -113,13 +116,16 @@ class _CelebPageState extends State<CelebPage> {
   Widget buildItemGridView(SearchResult itemData, int index) {
     return Hero(
       tag: index,
-
       child: Material(
         color: AppTheme.bottomNavigationBarBackground_light,
         child: InkWell(
           onTap: () {
-            NavigatorUtil.pushPage(context, DetailCelebPage(celebId: itemData.id,urlAvatar: itemData.profilePath, animationTag: index));
-
+            NavigatorUtil.pushPageWithInterstitialAd(
+                context,
+                DetailCelebPage(
+                    celebId: itemData.id,
+                    urlAvatar: itemData.profilePath,
+                    animationTag: index));
           },
           child: Container(
             margin: EdgeInsets.all(5),
@@ -131,7 +137,8 @@ class _CelebPageState extends State<CelebPage> {
                 ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                   child: CachedNetworkImage(
-                    imageUrl: ImageUrl.getUrl(itemData.profilePath, ImageSize.w300),
+                    imageUrl:
+                        ImageUrl.getUrl(itemData.profilePath, ImageSize.w300),
                     fit: BoxFit.cover,
                     width: widthItemGrid,
                     height: double.infinity,
