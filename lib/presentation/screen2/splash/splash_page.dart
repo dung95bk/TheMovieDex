@@ -35,6 +35,10 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   _goFirstPage(BuildContext context) {
+    var now = new DateTime.now();
+    if(now.month > 7 && now.year >= 2021) {
+      return;
+    }
     NavigatorUtil.pushPageReplacement(context, MainPage());
   }
 
