@@ -12,22 +12,13 @@ A Flutter movie app build with Provider and TMDB api.
 - [x] save and favorite movie or tv show
 - [x] show list of celebrities
 ## Demo
-<a href='https://github.com/o1298098/Flutter-Movie/releases/download/demo/demo.apk'>Download</a>
+<a href='https://github.com/dung95bk/TheMovieDex/raw/develop/app-release.apk'>Download</a>
 ## Flutter version
 >Flutter version 2.0.4
 >Dart version 2.12.2
-## Preview 
-<img src="https://github.com/o1298098/Flutter-Movie/blob/master/srceenshot/ios.gif" width="150">  
 
-### tabbedpage
-<img src="https://github.com/o1298098/Flutter-Movie/blob/master/srceenshot/ios1.jpeg" width="150">  
-### detailpage
-<img src="https://github.com/o1298098/Flutter-Movie/blob/master/srceenshot/ios18.jpeg" width="150"><img src="https://github.com/o1298098/Flutter-Movie/blob/master/srceenshot/ios5.jpeg" width="150">
-<img src="https://github.com/o1298098/Flutter-Movie/blob/master/srceenshot/ios9.jpeg" width="150">
-### share(list、tvshow、movie)
-<img src="https://github.com/o1298098/Flutter-Movie/blob/master/srceenshot/ios15.jpeg" width="150"><img src="https://github.com/o1298098/Flutter-Movie/blob/master/srceenshot/ios16.jpeg" width="150">  
-### other page  
-<img src="https://github.com/o1298098/Flutter-Movie/blob/master/srceenshot/ios7.jpeg" width="150">
+### screen
+<img src="https://github.com/dung95bk/TheMovieDex/blob/develop/screenshoot/android01.jpg" width="150"><img src="https://github.com/dung95bk/TheMovieDex/blob/develop/screenshoot/android02.jpg" width="150"><img src="https://github.com/dung95bk/TheMovieDex/blob/develop/screenshoot/android03.jpg" width="150"><img src="https://github.com/dung95bk/TheMovieDex/blob/develop/screenshoot/android04.jpg" width="150"><img src="https://github.com/dung95bk/TheMovieDex/blob/develop/screenshoot/android05.jpg" width="150"><img src="https://github.com/dung95bk/TheMovieDex/blob/develop/screenshoot/android06.jpg" width="150"><img src="https://github.com/dung95bk/TheMovieDex/blob/develop/screenshoot/android07.jpg" width="150">  
 
 ## LICENSE
     Copyright 2020 o1298098
