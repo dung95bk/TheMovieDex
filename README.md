@@ -18,7 +18,7 @@ A Flutter movie app build with Provider and TMDB api.
 >Dart version 2.12.2
 
 ### screen
-<img src="https://github.com/dung95bk/TheMovieDex/blob/develop/screenshoot/android01.jpg" width="150">&nbsp;<img src="https://github.com/dung95bk/TheMovieDex/blob/develop/screenshoot/android02.jpg" width="150"><img src="https://github.com/dung95bk/TheMovieDex/blob/develop/screenshoot/android03.jpg" width="150"><img src="https://github.com/dung95bk/TheMovieDex/blob/develop/screenshoot/android04.jpg" width="150"><img src="https://github.com/dung95bk/TheMovieDex/blob/develop/screenshoot/android05.jpg" width="150"><img src="https://github.com/dung95bk/TheMovieDex/blob/develop/screenshoot/android06.jpg" width="150"><img src="https://github.com/dung95bk/TheMovieDex/blob/develop/screenshoot/android07.jpg" width="150">  
+<img src="https://github.com/dung95bk/TheMovieDex/blob/develop/screenshoot/android01.jpg" width="150">&nbsp;<img src="https://github.com/dung95bk/TheMovieDex/blob/develop/screenshoot/android02.jpg" width="150">&nbsp;<img src="https://github.com/dung95bk/TheMovieDex/blob/develop/screenshoot/android03.jpg" width="150">&nbsp;<img src="https://github.com/dung95bk/TheMovieDex/blob/develop/screenshoot/android04.jpg" width="150">&nbsp;<img src="https://github.com/dung95bk/TheMovieDex/blob/develop/screenshoot/android05.jpg" width="150">&nbsp;<img src="https://github.com/dung95bk/TheMovieDex/blob/develop/screenshoot/android06.jpg" width="150">&nbsp;<img src="https://github.com/dung95bk/TheMovieDex/blob/develop/screenshoot/android07.jpg" width="150">  
 
 ## LICENSE
     Copyright 2020 o1298098
